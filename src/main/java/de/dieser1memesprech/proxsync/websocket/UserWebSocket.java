@@ -1,27 +1,15 @@
 package de.dieser1memesprech.proxsync.websocket;
 
-import com.google.firebase.database.DataSnapshot;
-import de.dieser1memesprech.proxsync._9animescraper.AnimeSearchObject;
-import de.dieser1memesprech.proxsync._9animescraper.config.Configuration;
-import de.dieser1memesprech.proxsync._9animescraper.util.AnimeUtils;
-import de.dieser1memesprech.proxsync._9animescraper.util.HtmlUtils;
 import de.dieser1memesprech.proxsync.database.Database;
 import de.dieser1memesprech.proxsync.user.Room;
 import de.dieser1memesprech.proxsync.user.RoomHandler;
-import de.dieser1memesprech.proxsync.user.User;
-import de.dieser1memesprech.proxsync.user.Video;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.*;
 import javax.json.spi.JsonProvider;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import javax.xml.bind.Element;
 import java.io.StringReader;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,46 +85,6 @@ public class UserWebSocket {
             r.getUserMap().get(session).setUid(jsonMessage.getString("value"));
         }
 
-        if ("episodeLink".equals(jsonMessage.getString("action"))) {
-            Room r = RoomHandler.getInstance().getRoomBySession(session);
-            if (r != null) {
-                r.reset9anime();
-                String name = jsonMessage.getString("name");
-                String url = AnimeUtils.makeDirectLinkForNameAndEpisode(name, jsonMessage.getInt("episode"));
-                r.addVideo(url);
-            }
-        }
-
-        if ("search".equals(jsonMessage.getString("action"))) {
-            System.out.println("Sending search request for keyword: " + jsonMessage.getString("keyword"));
-            String s = jsonMessage.getString("keyword");
-            if (s.toLowerCase().contains("zitat")) {
-                s = "Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e";
-            }
-            List<AnimeSearchObject> animeSearchObjectList = AnimeUtils.search(s);
-            JsonProvider provider = JsonProvider.provider();
-            JsonArrayBuilder jsonArray = Json.createArrayBuilder();
-            Object data = Database.getDataFromDatabase("users/" + RoomHandler.getInstance().getRoomBySession(session).getUserMap().get(session).getUid() + "/watchlist").getValue();
-            Map<String, Object> dataMap = new LinkedHashMap<>();
-            try {
-                dataMap = (Map<String, Object>) data;
-            } catch (ClassCastException e) {
-                e.printStackTrace();
-            }
-            for (AnimeSearchObject animeSearchObject : animeSearchObjectList) {
-                jsonArray.add(Json.createObjectBuilder()
-                        .add("title", animeSearchObject.getTitle())
-                        .add("link", animeSearchObject.getLink())
-                        .add("image", animeSearchObject.getPoster())
-                        .add("lastEpisode", animeSearchObject.getLastEpisode())
-                        .add("watchlist", -1)
-                        .add("episodeCount", animeSearchObject.getEpisodeCount()));
-            }
-            javax.json.JsonArray array = jsonArray.build();
-            JsonObject messageJson = provider.createObjectBuilder()
-                    .add("action", "search-result").add("result", array).build();
-            UserSessionHandler.getInstance().sendToSession(session, messageJson);
-        }
 
         if ("changeRoomName".equals(jsonMessage.getString("action"))) {
             Room old = RoomHandler.getInstance().getRoomBySession(session);
@@ -189,7 +137,6 @@ public class UserWebSocket {
         if ("video".equals(jsonMessage.getString("action"))) {
             Room r = RoomHandler.getInstance().getRoomBySession(session);
             if (r != null) {
-                r.reset9anime();
                 r.addVideo(jsonMessage.getString("url"));
             }
         }
@@ -247,51 +194,7 @@ public class UserWebSocket {
             }
         }
 
-        if ("addToWatchlist".equals(jsonMessage.getString("action"))) {
-            Room r = RoomHandler.getInstance().getRoomBySession(session);
-            if (r != null) {
-                User user = r.getUserMap().get(session);
-                if (!user.isAnonymous()) {
-                    Video video;
-                    if(r.getPlaylist().isEmpty()) {
-                        video = r.getLastVideo();
-                        if(video == null) {
-                            return;
-                        }
-                    } else {
-                        video = r.getPlaylist().peek();
-                    }
-                    int offset = 0;
-                    if (jsonMessage.getBoolean("next")) {
-                        offset = 1;
-                    }
-                    String status = "watching";
-                    if (!jsonMessage.getBoolean("next") && video.getEpisode() <= 1) {
-                        status = "planned";
-                    }
-                    String key = video.getKey();
-                    int epNum = video.getEpisode() - 1 + offset;
-                    if (("" + epNum).equals(video.getEpisodeCount())) {
-                        status = "completed";
-                    }
-                    Database.addToWatchlist(key, epNum + "", status, user.getUid(), session);
-                }
-            }
-        }
 
         reader.close();
-    }
-
-    private int getEpisodenumFromWatchlist(Map<String, Object> dataMap, String link) {
-        int num = -1;
-        String key = link.substring(link.lastIndexOf("/") + 1);
-        key = key.replaceAll("\\.", "-");
-        if (dataMap.size() > 0) {
-            Map map = (Map) dataMap.get(key);
-            if (map != null) {
-                num = Integer.parseInt(map.get("episode").toString());
-            }
-        }
-        return num;
     }
 }

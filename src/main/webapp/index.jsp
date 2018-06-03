@@ -1,6 +1,5 @@
 <%@ page import="de.dieser1memesprech.proxsync.database.Database" %>
 <%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
-<%@ page import="de.dieser1memesprech.proxsync.database.Notification" %>
 <%@ page import="java.util.List" %>
 <html language="de" class="mdc-typography">
 <head>
@@ -180,40 +179,11 @@
     </div>
 </main>
 <p id="invite-link"></p>
-<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase-firestore.js"></script>
-<script>
-    var oldConfig = {
-        apiKey: "AIzaSyDDD68tM8V5yNi3aiZco8FnK6IiXTOAhi8",
-        authDomain: "proxsync.firebaseapp.com",
-        databaseURL: "https://proxsync.firebaseio.com",
-        projectId: "proxsync",
-        storageBucket: "",
-        messagingSenderId: "424948078611"
-    };
-    var config = {
-        apiKey: "AIzaSyCHMFCl1SAsC9VDeunRsIU3UpuCQ5JQdA4",
-        authDomain: "anisync-be184.firebaseapp.com",
-        databaseURL: "https://anisync-be184.firebaseio.com",
-        projectId: "anisync-be184",
-        storageBucket: "anisync-be184.appspot.com",
-        messagingSenderId: "908197635545"
-    };
-    firebase.initializeApp(config);
-    firebase.initializeApp(oldConfig, "oldFirebase");
-    var db = firebase.firestore();
-</script>
-<script src="res/firebase.js"></script>
-<script src="res/firebaseauth.js"></script>
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script src="res/videojs.disableProgress.js"></script>
 <script src="res/player-script.js?v=0.0.0.4.10"></script>
 <script src="res/tab-switch.js?v=0.1"></script>
 <script src="res/Youtube.js"></script>
-<script src="res/notification-script.js"></script>
 <script>
     var notificationsEl = document.querySelector('#notification-menu');
     if(notificationsEl != null) {

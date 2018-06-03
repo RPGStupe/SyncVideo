@@ -12,6 +12,7 @@ if (loc.protocol === "https:") {
 new_uri += "//" + loc.host;
 new_uri += loc.pathname + "actions";
 var socket = new WebSocket(new_uri);
+
 socket.onmessage = onMessage;
 var inSearchField = false;
 var isOwner = true;
@@ -30,6 +31,13 @@ var oldNextEpisode = true;
 let menu = new mdc.menu.MDCSimpleMenu(document.querySelector('#search-menu'));
 const snackbar = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 var userCount = 0;
+
+if (socket.readyState === socket.OPEN) {
+    createRoom();
+} else {
+    socket.onopen = createRoom;
+}
+
 //add onload function
 if (window.attachEvent) {
     window.attachEvent('onload', onloadFunction);
@@ -43,19 +51,6 @@ if (window.attachEvent) {
         window.onload = newonload;
     } else {
         window.onload = onloadFunction;
-    }
-}
-
-function blurredSearch() {
-    if (!menu.open && !blurred) {
-        console.log("resetting search");
-        document.getElementById("tf-box-search-field").focus();
-        document.getElementById("tf-box-search-field").value = '';
-        $('#tf-box-search-field').blur();
-        blurred = true;
-    } else if(menu.open) {
-        $('#tf-box-search-field').focus();
-        console.log("search menu is open!");
     }
 }
 
@@ -137,24 +132,19 @@ function enableSeeking() {
     document.getElementsByClassName("vjs-progress-control")[0].style.pointerEvents = '';
 }
 
-$("#name").blur(function () {
-    lastName = document.getElementById("name").value;
-    document.getElementById("name").value = getCookie("username");
-});
-
 var onloadExecuted = false;
 
 //hide video url and text field (when not connected to a room)
 function onloadFunction() {
     onload = true;
     initCheckbox();
-    mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
-    document.getElementById("url-field").style.display = 'none';
-    document.getElementById("url-button").style.display = 'none';
-    document.getElementById("invite-link").style.display = 'none';
-    document.getElementById("invite-button").style.display = 'none';
-    document.getElementById("auto-next-container").style.display = 'none';
-    document.getElementById("auto-play-container").style.display = 'none';
+    // mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
+    // document.getElementById("url-field").style.display = 'none';
+    // document.getElementById("url-button").style.display = 'none';
+    // document.getElementById("invite-link").style.display = 'none';
+    // document.getElementById("invite-button").style.display = 'none';
+    // document.getElementById("auto-next-container").style.display = 'none';
+    // document.getElementById("auto-play-container").style.display = 'none';
     checkCookie();
 }
 
@@ -240,9 +230,9 @@ function createRoom() {
         roomJoined = true;
         var userAction = {
             action: "create",
-            uid: uid,
+            uid: "ABC",
             name: getCookie("username"),
-            anonymous: anonymous
+            anonymous: false
         };
         socket.send(JSON.stringify(userAction));
     }
@@ -582,24 +572,6 @@ function addSearchResultToPlaylist(url) {
         socket.send(JSON.stringify(userAction));
     }
 }
-
-$(document).on('click', function (e) {
-    if ($(e.target).closest("#mdc-search-list").length === 0 && $(e.target).closest("#tf-box-search").length === 0) {
-        //menu.open = false;
-        blurredSearch();
-    } else if ($(e.target).closest("#tf-box-search").length === 0) {
-        // TODO: do not close when clicked
-        inSearchField = true;
-        console.log("not blurred");
-        blurred = false;
-        menu.open = true;
-    } else {
-        console.log("not blurred");
-        blurred = false;
-        inSearchField = false;
-    }
-    return true;
-});
 
 Number.prototype.pad = function (size) {
     size = Math.max(size, 2);

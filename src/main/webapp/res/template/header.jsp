@@ -73,47 +73,47 @@
                             </ul>
                         </div>
                     </div>
-                    <i class="material-icons mdc-toolbar__icon"
-                       style="float:right;font-size:40px;padding:8px!important;"
-                       onclick="menuNotifications.open = !menuNotifications.open">
-                        <%
-                        List<Notification> notifications = Database.getNotifications(uid);
-                            if (notifications.isEmpty()) {
-                            %>
-                            notifications_none
-                            <%
-                            } else {
-                            %>
-                            notifications_active
-                            <%
-                            }
-                            %>
-                    </i>
-                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" tabindex="-1"
-                         id="notification-menu" style="top:64px;right:72px;">
-                        <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
-                            <%if(!notifications.isEmpty()&& ! "".equals(uid)) {%>
-                            <%
-                            for (int i = 0; i < notifications.size(); i++) {
-                            Notification n = notifications.get(i);
-                            %>
-                            <li class="mdc-list-item profile-list" role="menuitem" aria-disabled="true"
-                                id="notifications-<%=n.getKey()%>">
-                                <span style="align-self:center;z-index:5; ">
-                                    <a href="javascript:void(0)"
-                                       onclick="watchNext(event,'<%=n.getKey()%>');return false;"
-                                       style="color:inherit;text-decoration: none"><%=n.getTitle()%>: <%=n.getLatestEpisode()%>/<%=n.getEpisodeCount()%></a>
-                                    <i onclick="removeNotification('<%=n.getKey()%>');return false;"
-                                       class="material-icons remove-notification">clear</i>
-                                </span>
-                            </li>
-                            <% if (i < notifications.size() - 1) {%>
-                            <li role="separator" class="mdc-list-divider" id="divider-<%=n.getKey()%>"></li>
-                            <%}%>
-                            <%}%>
-                            <%}%>
-                        </ul>
-                    </div>
+                    <%--<i class="material-icons mdc-toolbar__icon"--%>
+                       <%--style="float:right;font-size:40px;padding:8px!important;"--%>
+                       <%--onclick="menuNotifications.open = !menuNotifications.open">--%>
+                        <%--<%--%>
+                        <%--List<Notification> notifications = Database.getNotifications(uid);--%>
+                            <%--if (notifications.isEmpty()) {--%>
+                            <%--%>--%>
+                            <%--notifications_none--%>
+                            <%--<%--%>
+                            <%--} else {--%>
+                            <%--%>--%>
+                            <%--notifications_active--%>
+                            <%--<%--%>
+                            <%--}--%>
+                            <%--%>--%>
+                    <%--</i>--%>
+                    <%--<div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" tabindex="-1"--%>
+                         <%--id="notification-menu" style="top:64px;right:72px;">--%>
+                        <%--<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">--%>
+                            <%--<%if(!notifications.isEmpty()&& ! "".equals(uid)) {%>--%>
+                            <%--<%--%>
+                            <%--for (int i = 0; i < notifications.size(); i++) {--%>
+                            <%--Notification n = notifications.get(i);--%>
+                            <%--%>--%>
+                            <%--<li class="mdc-list-item profile-list" role="menuitem" aria-disabled="true"--%>
+                                <%--id="notifications-<%=n.getKey()%>">--%>
+                                <%--<span style="align-self:center;z-index:5; ">--%>
+                                    <%--<a href="javascript:void(0)"--%>
+                                       <%--onclick="watchNext(event,'<%=n.getKey()%>');return false;"--%>
+                                       <%--style="color:inherit;text-decoration: none"><%=n.getTitle()%>: <%=n.getLatestEpisode()%>/<%=n.getEpisodeCount()%></a>--%>
+                                    <%--<i onclick="removeNotification('<%=n.getKey()%>');return false;"--%>
+                                       <%--class="material-icons remove-notification">clear</i>--%>
+                                <%--</span>--%>
+                            <%--</li>--%>
+                            <%--<% if (i < notifications.size() - 1) {%>--%>
+                            <%--<li role="separator" class="mdc-list-divider" id="divider-<%=n.getKey()%>"></li>--%>
+                            <%--<%}%>--%>
+                            <%--<%}%>--%>
+                            <%--<%}%>--%>
+                        <%--</ul>--%>
+                    <%--</div>--%>
                     <span id="welcome-msg" class="mdc-toolbar__title"
                           style="margin-top:4px;float:right;align-self:center;"></span>
                 </div>

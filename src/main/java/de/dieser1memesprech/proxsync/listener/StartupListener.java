@@ -7,12 +7,9 @@ package de.dieser1memesprech.proxsync.listener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseCredentials;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
-import de.dieser1memesprech.proxsync._9animescraper.config.Configuration;
+import de.dieser1memesprech.proxsync.config.Configuration;
 import de.dieser1memesprech.proxsync.database.Database;
-import de.dieser1memesprech.proxsync.util.AiringUpdater;
-import de.dieser1memesprech.proxsync.util.NotificationUpdater;
 import net.thegreshams.firebase4j.error.FirebaseException;
 
 import javax.servlet.ServletContextEvent;
@@ -20,14 +17,13 @@ import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class StartupListener implements ServletContextListener {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(0);
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("Starting up!");
@@ -47,10 +43,6 @@ public class StartupListener implements ServletContextListener {
             System.out.println("Database initialized");
             Database.initStreamIdListener();
 
-            Runnable updater = new NotificationUpdater();
-            scheduler.scheduleAtFixedRate(new AiringUpdater(), 0, 1, TimeUnit.DAYS);
-            scheduler.scheduleAtFixedRate(updater, 0, 5, TimeUnit.MINUTES);
-
             System.out.println("Notification updater initialized");
         } catch (IOException e) {
             System.out.println("Error during Firebase initialization");
@@ -64,7 +56,7 @@ public class StartupListener implements ServletContextListener {
         scheduler.shutdown();
         try {
             scheduler.awaitTermination(30, TimeUnit.SECONDS);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             scheduler.shutdownNow();
         }
@@ -83,22 +75,8 @@ public class StartupListener implements ServletContextListener {
             }
             System.out.println(raw);
             Configuration.instance.getFirebase().put("users", raw);
-        } catch(FirebaseException | UnsupportedEncodingException e) {
+        } catch (FirebaseException | UnsupportedEncodingException e) {
 
-        }
-    }
-
-    void updateWatching() {
-        DataSnapshot data = Database.getDataFromDatabase("users");
-        for(DataSnapshot c: data.getChildren()) {
-            if(c.hasChild("watchlist")) {
-                for(DataSnapshot e: c.child("watchlist").getChildren()) {
-                    System.out.println(c.getKey() + " " + e.getKey() + " " + e.child("episode").getValue());
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    map.put(c.getKey(), e.child("episode").getValue());
-                    Database.updateData("watching/" + e.getKey(), map);
-                }
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package de.dieser1memesprech.proxsync._9animescraper.config;
+package de.dieser1memesprech.proxsync.config;
 
 import com.google.firebase.database.DataSnapshot;
 import de.dieser1memesprech.proxsync.database.Database;
