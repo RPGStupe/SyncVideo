@@ -64,24 +64,15 @@ public class Room {
     private static RandomString randomString = new RandomString(10);
 
     public Room(Session host, String hostname, String hostuid, boolean hostanonymous) {
-        System.out.println("session added");
         playlist = new LinkedList<Video>();
-        System.out.println("session added");
         this.host = host;
-        System.out.println("session added");
         do {
             id = randomString.nextString();
-            System.out.println("session added");
         } while (!RoomHandler.getInstance().checkId(id));
-        System.out.println("session added");
         sessions = new LinkedList<Session>();
-        System.out.println("session added");
         this.addSession(host, hostname, hostuid, hostanonymous);
-        System.out.println("session added");
         RoomHandler.getInstance().addRoom(this);
-        System.out.println("session added");
         httpClient = HttpClients.createDefault();
-        System.out.println("session added");
     }
 
     public Video getLastVideo() {

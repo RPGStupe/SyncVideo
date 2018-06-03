@@ -32,10 +32,48 @@ let menu = new mdc.menu.MDCSimpleMenu(document.querySelector('#search-menu'));
 const snackbar = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 var userCount = 0;
 
-if (socket.readyState === socket.OPEN) {
-    createRoom();
+
+function joinParamRoom() {
+    var userAction = {
+        action: "join",
+        id: "" + getQueryVariable("r"),
+        uid: uid,
+        name: getCookie("username"),
+        anonymous: false
+    };
+    isOwner = false;
+    socket.send(JSON.stringify(userAction));
+}
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) {
+            return pair[1];
+        }
+    }
+    return null;
+}
+
+if (getQueryVariable("r") === null) {
+    if (socket.readyState === socket.OPEN) {
+        createRoom();
+    } else {
+        socket.onopen = createRoom;
+    }
+    var id = getQueryVariable("id");
+    var episode = getQueryVariable("episode");
+    if (id !== null) {
+        loadVideoByEpisode("https://9anime.to/watch/" + id, episode === null ? 1 : parseInt(episode));
+    }
 } else {
-    socket.onopen = createRoom;
+    if (socket.readyState === socket.OPEN) {
+        joinParamRoom();
+    } else {
+        socket.onopen = joinParamRoom;
+    }
 }
 
 //add onload function
@@ -223,6 +261,8 @@ function showElement(elementId) {
     document.getElementById(elementId).style.display = '';
 }
 
+const uid = makeid();
+
 function createRoom() {
     if (!roomJoined) {
         bindTimeUpdate();
@@ -230,12 +270,22 @@ function createRoom() {
         roomJoined = true;
         var userAction = {
             action: "create",
-            uid: "ABC",
+            uid: uid,
             name: getCookie("username"),
             anonymous: false
         };
         socket.send(JSON.stringify(userAction));
     }
+}
+
+function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }
 
 function bindTimeUpdate() {
