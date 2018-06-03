@@ -64,15 +64,24 @@ public class Room {
     private static RandomString randomString = new RandomString(10);
 
     public Room(Session host, String hostname, String hostuid, boolean hostanonymous) {
+        System.out.println("session added");
         playlist = new LinkedList<Video>();
+        System.out.println("session added");
         this.host = host;
+        System.out.println("session added");
         do {
             id = randomString.nextString();
+            System.out.println("session added");
         } while (!RoomHandler.getInstance().checkId(id));
+        System.out.println("session added");
         sessions = new LinkedList<Session>();
+        System.out.println("session added");
         this.addSession(host, hostname, hostuid, hostanonymous);
+        System.out.println("session added");
         RoomHandler.getInstance().addRoom(this);
+        System.out.println("session added");
         httpClient = HttpClients.createDefault();
+        System.out.println("session added");
     }
 
     public Video getLastVideo() {
@@ -117,10 +126,7 @@ public class Room {
     }
 
     public void addSession(Session session, String name, String uid, boolean anonymous) {
-        String avatarUrl = Database.getAvatarFromDatabase(uid);
-        if ("null".equals(avatarUrl)) {
-            avatarUrl = "https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/panda.svg?alt=media&token=6f4d5bf1-af69-4211-994d-66655456d91a";
-        }
+        String avatarUrl = "http://www.thehindu.com/sci-tech/technology/internet/article17759222.ece/alternates/FREE_660/02th-egg-person";
         User user = new User(uid, name, avatarUrl, anonymous);
         userMap.put(session, user);
         setName(session, name);
@@ -338,7 +344,7 @@ public class Room {
 
     private String createDirectLink(String video) {
         System.out.println(video);
-            return video;
+        return video;
     }
 
 

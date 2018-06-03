@@ -62,6 +62,7 @@ public class UserWebSocket {
             }
             System.out.println(jsonMessage.getString("uid"));
             Room r = new Room(session, jsonMessage.getString("name"), jsonMessage.getString("uid"), jsonMessage.getBoolean("anonymous"));
+            System.out.println("After Room creation");
             RoomHandler.getInstance().mapSession(session, r);
         }
 
