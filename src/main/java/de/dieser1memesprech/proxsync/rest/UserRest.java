@@ -19,11 +19,8 @@ import javax.ws.rs.core.MediaType;
 
 
 @ApplicationScoped
-@Path("/user")
-public class UserRest
-
-{
-
+@Path("user")
+public class UserRest {
     @Inject
     private UserDao userDao;
 

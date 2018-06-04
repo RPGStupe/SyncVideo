@@ -11,16 +11,20 @@
             de.dieser1memesprech.proxsync.listener.StartupListener
         </listener-class>
     </listener>
+    <display-name>Restful Web Application</display-name>
+
     <servlet>
-        <display-name>SyncVideoServlet</display-name>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <servlet-name>jersey-serlvet</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
-            <param-name>javax.ws.rs.Application</param-name>
+            <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>de.dieser1memesprech.proxsync.rest</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
-        <url-pattern>/api/*</url-pattern>
+        <servlet-name>jersey-serlvet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 </web-app>
