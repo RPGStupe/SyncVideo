@@ -11,4 +11,16 @@
             de.dieser1memesprech.proxsync.listener.StartupListener
         </listener-class>
     </listener>
+    <servlet>
+        <display-name>SyncVideoServlet</display-name>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>de.dieser1memesprech.proxsync.rest</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 </web-app>
