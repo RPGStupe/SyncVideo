@@ -2,8 +2,6 @@ package de.dieser1memesprech.proxsync.rest;
 
 import de.dieser1memesprech.proxsync.database.dao.UserDao;
 import de.dieser1memesprech.proxsync.database.model.UserModel;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import org.glassfish.jersey.process.internal.RequestScoped;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 
-@RequestScoped //this make the diference
+@ApplicationScoped
 @Path("user")
 public class UserRest {
     @Inject
@@ -22,7 +20,6 @@ public class UserRest {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public UserModel add(UserModel user) {
         userDao.persist(user);
         return user;
@@ -65,8 +62,8 @@ public class UserRest {
 
     @GET
     @Path("/test")
-    public void test() {
-        System.out.println("TEST");
+    public String test() {
+        return "TEST";
     }
 
 }

@@ -60,6 +60,8 @@ function getQueryVariable(variable) {
 if (getQueryVariable("r") === null) {
     if (socket.readyState === socket.OPEN) {
         createRoom();
+
+
     } else {
         socket.onopen = createRoom;
     }
@@ -824,6 +826,16 @@ function enterName() {
 
 function copyInviteLink() {
     copyToClipboard(document.getElementById('invite-link'));
+    jQuery.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        'type': 'POST',
+        'url': 'http://localhost:8080/SyncVideo/rest/user/add',
+        'data': JSON.stringify({username: 'username', pw: 'pw'}),
+        'dataType': 'json'
+    });
 }
 
 function skipIntro() {
