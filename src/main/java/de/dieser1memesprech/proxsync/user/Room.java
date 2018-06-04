@@ -1,22 +1,10 @@
 package de.dieser1memesprech.proxsync.user;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import de.dieser1memesprech.proxsync.config.Configuration;
-import de.dieser1memesprech.proxsync.database.Database;
 import de.dieser1memesprech.proxsync.util.NamespaceContextMap;
 import de.dieser1memesprech.proxsync.util.RandomString;
 import de.dieser1memesprech.proxsync.websocket.UserSessionHandler;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.xml.sax.InputSource;
 
 import javax.json.*;
@@ -27,13 +15,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Room {
     private int episode;

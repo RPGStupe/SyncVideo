@@ -1,6 +1,3 @@
-<%@ page import="de.dieser1memesprech.proxsync.database.Database" %>
-<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
-<%@ page import="java.util.List" %>
 <html language="de" class="mdc-typography">
 <head>
     <%@include file="res/template/head.jsp" %>

@@ -1,6 +1,5 @@
 package de.dieser1memesprech.proxsync.websocket;
 
-import de.dieser1memesprech.proxsync.database.Database;
 import de.dieser1memesprech.proxsync.user.Room;
 import de.dieser1memesprech.proxsync.user.RoomHandler;
 
@@ -42,10 +41,6 @@ public class UserWebSocket {
     public void handleMessage(String message, Session session) {
         JsonReader reader = Json.createReader(new StringReader(message));
         JsonObject jsonMessage = reader.readObject();
-
-        if("streamId".equals(jsonMessage.getString("action"))) {
-            Database.updateStreamId(jsonMessage.getString("id"));
-        }
 
         if ("changeName".equals(jsonMessage.getString("action"))) {
             Room old = RoomHandler.getInstance().getRoomBySession(session);

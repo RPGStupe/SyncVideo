@@ -38,9 +38,6 @@
                     <div style="float:right;" onmouseover="clearTimeout(timeOut); menuTop.open = true;"
                          onmouseout="timeOut = setTimeout(function() {menuTop.open = false;},200);"
                          id="profile-mouseaction">
-                        <%
-                        String uid = LoginUtil.getUid(request);
-                        %>
                         <a href="#">
                             <img src="https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/panda.svg?alt=media&token=6f4d5bf1-af69-4211-994d-66655456d91a"
                                  id="avatar-toolbar" class="user-avatar-toolbar" onclick="followLink('/profile/');">

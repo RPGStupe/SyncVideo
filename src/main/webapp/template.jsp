@@ -1,5 +1,3 @@
-<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
-<%@ page import="de.dieser1memesprech.proxsync.database.Database" %>
 <html language="de" class="mdc-typography">
 <head>
     <meta charset="utf-8"/>
@@ -51,15 +49,7 @@
                         <a href="../profile">
                             <img src="<%
                             String url= "https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/panda.svg?alt=media&token=6f4d5bf1-af69-4211-994d-66655456d91a";
-                            String uid = LoginUtil.getUid(request);
-                            if (!"".equals(uid)) {
-                            String databaseUrl = Database.getAvatarFromDatabase(uid);
-                            if(databaseUrl.equals("null")) {
-                                Database.setAvatar(uid, url);
-                            } else {
-                                url = databaseUrl;
-                            }
-                            }
+
                             %><%=url%>" id="avatar-toolbar" class="user-avatar-toolbar">
                         </a>
                         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="profile-menu" tabindex="-1"style="top:64px;right:-14px;">

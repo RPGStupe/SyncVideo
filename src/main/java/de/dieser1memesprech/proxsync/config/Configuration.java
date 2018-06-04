@@ -1,7 +1,6 @@
 package de.dieser1memesprech.proxsync.config;
 
 import com.google.firebase.database.DataSnapshot;
-import de.dieser1memesprech.proxsync.database.Database;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.service.Firebase;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,16 +27,6 @@ public enum Configuration {
             }
         }
         return firebase;
-    }
-
-    public String getStreamServerId() {
-        if(streamServerId == null) {
-            DataSnapshot snapshot = Database.getDataFromDatabase("config/stream-id");
-            if(snapshot != null) {
-                streamServerId = snapshot.getValue(String.class);
-            }
-        }
-        return streamServerId;
     }
 
     public void setStreamServerId(String id) {
