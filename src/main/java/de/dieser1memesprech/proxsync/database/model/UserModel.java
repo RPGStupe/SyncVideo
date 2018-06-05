@@ -24,8 +24,10 @@ public class UserModel implements Serializable {
     @XmlElement
     private String pw;
 
-    public UserModel() {
+    public UserModel(String username, String pw) {
         super();
+        this.username = username;
+        this.pw = pw;
     }
 
     public Long getId() {

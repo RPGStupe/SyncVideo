@@ -832,8 +832,7 @@ function copyInviteLink() {
             'Content-Type': 'application/json'
         },
         'type': 'POST',
-        'url': 'http://localhost:8080/SyncVideo/rest/user/add',
-        'data': JSON.stringify({username: 'username', pw: 'pw'}),
+        'url': './rest/user/add/hello/pw',
         'dataType': 'json'
     });
 }

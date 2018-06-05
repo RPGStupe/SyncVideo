@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 
 @ApplicationScoped
@@ -18,11 +19,12 @@ public class UserRest {
     private UserDao userDao;
 
     @POST
-    @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public UserModel add(UserModel user) {
-        userDao.persist(user);
-        return user;
+    @Path("/add/{username}/{pw}")
+    public Response add(@PathParam("username") String username, @PathParam("pw") String pw) {
+        UserModel user = new UserModel(username, pw);
+        System.out.println(user.getPw()+user.getUsername());
+        //userDao.persist(user);
+        return Response.status(200).build();
     }
 
     @POST
