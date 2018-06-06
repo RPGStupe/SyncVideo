@@ -112,19 +112,6 @@
                                             </div>
                                         </div>
                                         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-                                            <div class="mdc-form-field" id="auto-next-container"
-                                                 style="margin-right: 10px; margin-top: 20px;">
-                                                <div class="mdc-switch">
-                                                    <input type="checkbox" id="auto-next-checkbox"
-                                                           class="mdc-switch__native-control"/>
-                                                    <div class="mdc-switch__background">
-                                                        <div class="mdc-switch__knob"></div>
-                                                    </div>
-                                                </div>
-                                                <label for="auto-next-checkbox" class="mdc-switch-label">Auto
-                                                    next
-                                                    episode</label>
-                                            </div>
                                             <div class="mdc-form-field" id="auto-play-container"
                                                  style="margin-right: 10px; margin-top: 10px;">
                                                 <div class="mdc-switch">

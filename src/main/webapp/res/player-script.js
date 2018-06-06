@@ -106,17 +106,6 @@ myPlayer.on('error', function () {
 });
 
 function initCheckbox() {
-    if (document.getElementById("auto-next-checkbox").checked === false) {
-        document.getElementById("auto-next-checkbox").click();
-    }
-    $('#auto-next-checkbox').click(function () {
-        console.log(document.getElementById("auto-next-checkbox").checked);
-        var userAction = {
-            "action": "autoNext",
-            "value": document.getElementById("auto-next-checkbox").checked
-        };
-        socket.send(JSON.stringify(userAction));
-    });
     if (document.getElementById("auto-play-checkbox").checked === false) {
         document.getElementById("auto-play-checkbox").click();
     }
@@ -522,14 +511,9 @@ function onMessage(event) {
                 disableSeeking();
                 hidePlayButtons();
             } else {
-                var userAction = {
-                    "action": "autoNext",
-                    "value": document.getElementById("auto-next-checkbox").checked
-                };
                 socket.send(JSON.stringify(userAction));
                 document.getElementById("url-field").style.display = '';
                 document.getElementById("url-button").style.display = '';
-                document.getElementById("auto-next-container").style.display = '';
                 document.getElementById("auto-play-container").style.display = '';
                 showSpecialControl();
             }
@@ -541,25 +525,6 @@ function onMessage(event) {
         }
     }
     if (eventJSON.action === "playlist") {
-        var checkbox = document.getElementById("auto-next-checkbox");
-        if (eventJSON.playlist.length > 1 && !checkbox.disabled) {
-            console.log("set old value to " + checkbox.checked);
-            oldNextEpisode = checkbox.checked;
-            if (checkbox.checked) {
-                checkbox.click();
-            }
-            //checkbox.setAttribute("disabled", true);
-            checkbox.disabled = true;
-        } else if (eventJSON.playlist.length === 1) {
-            //checkbox.removeAttribute("disabled");
-            checkbox.disabled = false;
-            checkbox.checked = oldNextEpisode;
-            var userAction = {
-                "action": "autoNext",
-                "value": document.getElementById("auto-next-checkbox").checked
-            };
-            socket.send(JSON.stringify(userAction));
-        }
         var playListString = buildHtmlPlaylist(eventJSON.playlist);
         document.getElementById("playlist-list").innerHTML = playListString;
     }
@@ -739,11 +704,10 @@ function addToWatchlist(next) {
 }
 
 function buildHtmlPlaylist(playList) {
-    console.log("TEST");
     var res = "";
     for (var i = 0; i < playList.length; i++) {
         res += "<li class='mdc-list-item'>" +
-            "<img style='height:78px;padding-right:14px;' src='" + playList[i].episodePoster + "' role='presentation'></img>";
+            "<img style='height:78px;padding-right:14px;' src='" + "https://blog.majestic.com/wp-content/uploads/2010/10/Video-Icon-crop.png" + "' role='presentation'></img>";
         res += "<span class='mdc-list-item__text'>" + playList[i].title;
         if (playList[i].episode !== 0) {
             res += ", " + playList[i].episode + "/" + playList[i].episodeCount;
