@@ -29,18 +29,6 @@
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
                 <span id="anime-title" class="mdc-typography--headline"></span>
             </div>
-            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-                <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg"
-                        onclick="addToWatchlist(true)"
-                        id="add-next-watchlist-button"
-                        style="align-self: center;float: right;">watchlist: next
-                </button>
-                <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg"
-                        onclick="addToWatchlist(false)"
-                        id="add-watchlist-button"
-                        style="align-self: center;float: right;margin-right: 16px;">watchlist: this
-                </button>
-            </div>
         </div>
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-8">

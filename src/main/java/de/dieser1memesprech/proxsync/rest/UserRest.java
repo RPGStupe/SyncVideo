@@ -80,8 +80,8 @@ public class UserRest {
                 String sessionId = UUID.randomUUID().toString();
                 sessionToUid.put(sessionId, user.getId());
                 return Response.status(200)
-                        .cookie(new NewCookie("sessionId", sessionId))
-                        .cookie(new NewCookie("loggedIn", "true"))
+                        .cookie(new NewCookie("sessionid", sessionId,"/", "", "", 1000000, false))
+                        .cookie(new NewCookie("loggedIn", "true","/", "", "", 1000000, false))
                         .build();
             }
         }
@@ -93,7 +93,7 @@ public class UserRest {
     public Response logout(@CookieParam("sessionId") String sessionId) {
         sessionToUid.remove(sessionId);
         return Response.status(200)
-                .cookie(new NewCookie("loogedIn", "false"))
+                .cookie(new NewCookie("loggedIn", "false","/", "", "", 1000000, false))
                 .build();
     }
 }

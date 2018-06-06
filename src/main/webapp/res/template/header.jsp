@@ -174,7 +174,10 @@
             },
             'type': 'GET',
             'url': './rest/user/login/' + document.getElementById('username-text-field').value + "/" + document.getElementById('password-text-field').value,
-            'dataType': 'json'
+            'dataType': 'json',
+            success: function(result,status,jqXHR ){
+                console.log(result);
+            },
         });
     }
 
