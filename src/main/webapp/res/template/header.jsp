@@ -91,6 +91,35 @@
 
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script>
+
+    if (window.location.href.includes("profile")) {
+        jQuery.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'GET',
+            'url': '../rest/user/get',
+            'dataType': 'json',
+            success: function (result) {
+                document.getElementById("avatar-toolbar").setAttribute("src", result.avatar);
+            }
+        });
+    } else {
+        jQuery.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'GET',
+            'url': './rest/user/get',
+            'dataType': 'json',
+            success: function (result) {
+                document.getElementById("avatar-toolbar").setAttribute("src", result.avatar);
+            }
+        });
+    }
+
     async function logout() {
         await jQuery.ajax({
             headers: {

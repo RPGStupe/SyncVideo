@@ -137,11 +137,11 @@
         success: function (result) {
             var listtext = "";
             console.log(result);
-            for (var i = result.length -1; i >= 0; i++) {
-                listtext += result[i].url + "\r\n";
+            for (var i = result.length - 1; i >= 0; i--) {
+                listtext += result[i].url + "<br>";
             }
 
-            document.getElementById("watchlist-span").textContent = listtext;
+            document.getElementById("watchlist-span").innerHTML = listtext;
         }
     });
 
