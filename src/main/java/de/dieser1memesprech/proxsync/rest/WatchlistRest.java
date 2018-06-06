@@ -4,6 +4,7 @@ import de.dieser1memesprech.proxsync.database.dao.UserDao;
 import de.dieser1memesprech.proxsync.database.dao.WatchlistDao;
 import de.dieser1memesprech.proxsync.database.model.UserModel;
 import de.dieser1memesprech.proxsync.database.model.WatchlistModel;
+import de.dieser1memesprech.proxsync.user.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,24 +22,26 @@ public class WatchlistRest {
     private WatchlistDao watchlistDao;
 
     @POST
-    @Path("/add/{userid}")
-    public Response add(@PathParam("userid") Long userId, @HeaderParam("url") String url) {
-        WatchlistModel watchlistModel = new WatchlistModel();
-        watchlistModel.setUserId(userId);
-        watchlistModel.setUrl(url);
-        watchlistModel.setTimestamp(System.currentTimeMillis());
-        watchlistDao.persist(watchlistModel);
+    @Path("/add")
+    public Response add(@CookieParam("sessionId") String sessionId, @HeaderParam("url") String url) {
+        if(sessionId != null) {
+            WatchlistModel watchlistModel = new WatchlistModel();
+            watchlistModel.setUserId(UserRest.sessionToUid.get(sessionId));
+            watchlistModel.setUrl(url);
+            watchlistModel.setTimestamp(System.currentTimeMillis());
+            watchlistDao.persist(watchlistModel);
+        }
         return Response.status(200).build();
     }
 
     @GET
-    @Path("/get/{userid}")
+    @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public /*List<WatchlistModel>*/String getAll(@PathParam("userid") Long userId) {
+    public /*List<WatchlistModel>*/String getAll(@CookieParam("sessionId") Long sessionId) {
         List<WatchlistModel> watchlist = new ArrayList<>();
         List<WatchlistModel> listOfAll = watchlistDao.getAll();
         for(WatchlistModel model : listOfAll) {
-            if(model.getUserId().equals(userId))
+            if(model.getUserId().equals(UserRest.sessionToUid.get(sessionId)))
                 watchlist.add(model);
         }
         //return watchlist;

@@ -369,6 +369,16 @@ function loadVideo() {
         url: url
     };
     socket.send(JSON.stringify(userAction));
+    jQuery.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'url': url
+        },
+        'type': 'POST',
+        'url': './rest/watchlist/add/',
+        'dataType': 'json'
+    });
 }
 
 function loadVideoByEpisode(name, episode) {
@@ -825,16 +835,6 @@ function enterName() {
 
 function copyInviteLink() {
     copyToClipboard(document.getElementById('invite-link'));
-    jQuery.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'url': 'test'
-        },
-        'type': 'POST',
-        'url': './rest/watchlist/add/2',
-        'dataType': 'json'
-    });
 }
 
 function skipIntro() {

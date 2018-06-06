@@ -78,7 +78,7 @@ public class UserRest {
                 String sessionId = UUID.randomUUID().toString();
                 sessionToUid.put(sessionId, user.getId());
                 return Response.status(200)
-                        .cookie(new NewCookie("sessionid", sessionId,"/", "", "", 1000000, false))
+                        .cookie(new NewCookie("sessionId", sessionId,"/", "", "", 1000000, false))
                         .cookie(new NewCookie("loggedIn", "true","/", "", "", 1000000, false))
                         .build();
             }
