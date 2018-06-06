@@ -44,11 +44,10 @@ public class UserRest {
     }
 
     @GET
-    @Path("/getbyid/{id}")
+    @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public UserModel getById(@PathParam("id") Long id) {
-        UserModel user = userDao.findById(id);
-        return user;
+    public UserModel get(@CookieParam("sessionId") String sessionId) {
+        return userDao.findById(sessionToUid.get(sessionId));
     }
 
     @DELETE
@@ -60,17 +59,10 @@ public class UserRest {
         return user;
     }
 
-    @GET
-    @Path("/all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<UserModel> All(){
-    	return userDao.getAll();
-    }
-
     @POST
     @Path("/picture/avatar")
     public Response changeAvatar(@HeaderParam("url") String url, @CookieParam("sessionId") String sessionId) {
-        UserModel user = userDao.findByUnique("id", sessionToUid.get(sessionId));
+        UserModel user = userDao.findById(sessionToUid.get(sessionId));
         user.setAvatar(url);
         userDao.merge(user);
         return Response.status(200).build();
