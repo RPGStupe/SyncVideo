@@ -2,6 +2,7 @@ package de.dieser1memesprech.proxsync.rest;
 
 import de.dieser1memesprech.proxsync.database.dao.UserDao;
 import de.dieser1memesprech.proxsync.database.model.UserModel;
+import de.dieser1memesprech.proxsync.user.User;
 
 import java.util.List;
 
@@ -58,16 +59,12 @@ public class UserRest {
         userDao.removeDetached(user);
         return user;
     }
-
+    
     @GET
     @Path("/all")
-    public String all() {
-        List<UserModel> users = userDao.getAll();
-        String s = "";
-        for (UserModel user : users) {
-            s += user.getUsername() + " " + user.getPw() + "\n";
-        }
-        return s;
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserModel> All(){
+    	return userDao.getAll();
     }
 
     @GET
