@@ -31,8 +31,7 @@
         <%
             if (!LoginUtil.checkCookie(request, "sessionId").equals("")) {%>
         <div class="mdc-card mdc-card--theme-dark user-card"
-             id="banner-div"
-             style="background-image: url(https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/banner-default.png?alt=media&token=424d9e70-d360-4842-94ca-133ba9bb71ec);">
+             id="banner-div">
             <button class="mdc-fab material-icons" id="banner-button" aria-label="Favorite" onclick="bannerDialog.show()">
                 <span class="mdc-fab__icon">
                     edit
@@ -44,6 +43,8 @@
                 <h2 class="mdc-card__subtitle"></h2>
             </section>
         </div>
+        <h1>History</h1>
+        <span id="watchlist-span"></span>
         <%} else {%>
         <h4>Please log in</h4>
         <%}%>
@@ -117,9 +118,30 @@
         },
         'type': 'GET',
         'url': '../rest/user/get',
-        'dataType': 'html',
+        'dataType': 'json',
         success: function (result) {
-            console.log(result)
+            document.getElementById("banner-div").setAttribute("style", "background-image: url(" + result.banner + ");");
+            document.getElementById("avatar-on-card").setAttribute("src", result.avatar);
+            document.getElementById("user-name").textContent = result.username + "\r\n";
+        }
+    });
+
+    jQuery.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        'type': 'GET',
+        'url': '../rest/watchlist/get',
+        'dataType': 'json',
+        success: function (result) {
+            var listtext = "";
+            console.log(result);
+            for (var i = result.length -1; i >= 0; i++) {
+                listtext += result[i].url + "\r\n";
+            }
+
+            document.getElementById("watchlist-span").textContent = listtext;
         }
     });
 
