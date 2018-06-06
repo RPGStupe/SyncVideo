@@ -1,13 +1,16 @@
+.video-js {
+    min-width: 100%;
+    min-height: 100%;
+}
+
 /*
   Player Skin Designer for Video.js
   http://videojs.com
-
   To customize the player skin edit
   the CSS below. Click "details"
   below to add comments or questions.
   This file uses some SCSS. Learn more
   at http://sass-lang.com/guide)
-
   This designer can be linked to at:
   https://codepen.io/heff/pen/EarCt/left/?editors=010
 */
@@ -101,4 +104,11 @@
     background: white;
     /* Otherwise we'll rely on stacked opacities */
     background: rgba(115, 133, 159, 0.75);
+}
+
+.video-js.vjs-playing .vjs-tech {
+    pointer-events: none;
+}
+.video-js.vjs-paused .vjs-tech {
+    pointer-events: none;
 }

@@ -163,21 +163,17 @@
         </div>
     </div>
 </main>
-<p id="invite-link"></p>
+<p id="invite-link" style="
+    display: none;"></p>
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script src="res/videojs.disableProgress.js"></script>
 <script src="res/player-script.js?v=0.0.0.4.10"></script>
 <script src="res/tab-switch.js?v=0.1"></script>
 <script src="res/Youtube.js"></script>
 <script>
-    var notificationsEl = document.querySelector('#notification-menu');
-    if(notificationsEl != null) {
-        var menuNotifications = new mdc.menu.MDCSimpleMenu(notificationsEl);
-    }
-    var timeOut;
     mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
     var menuEl = document.querySelector('#profile-menu');
-    if(menuEl != null) {
+    if (menuEl != null) {
         var menuTop = new mdc.menu.MDCSimpleMenu(menuEl);
         menuEl.addEventListener('MDCSimpleMenu:selected', function (evt) {
             menuTop.open = false;
@@ -207,6 +203,7 @@
         console.log(path);
         window.location = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + path + loc;
     }
+
     var urlFieldEl = document.querySelector('#url-field');
     var urlField = new mdc.textField.MDCTextField(urlFieldEl);
 </script>
