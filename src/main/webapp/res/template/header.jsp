@@ -153,15 +153,18 @@
 
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script>
-    function logout() {
-        jQuery.ajax({
+    async function logout() {
+        await jQuery.ajax({
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             'type': 'POST',
             'url': './rest/user/logout',
-            'dataType': 'json'
+            'dataType': 'html',
+            success: function () {
+                location.reload();
+            }
         });
     }
 
@@ -174,10 +177,10 @@
             },
             'type': 'GET',
             'url': './rest/user/login/' + document.getElementById('username-text-field').value + "/" + document.getElementById('password-text-field').value,
-            'dataType': 'json',
-            success: function(result,status,jqXHR ){
-                console.log(result);
-            },
+            'dataType': 'html',
+            success: function () {
+                location.reload();
+            }
         });
     }
 
