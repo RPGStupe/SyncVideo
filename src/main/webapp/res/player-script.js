@@ -829,10 +829,11 @@ function copyInviteLink() {
     jQuery.ajax({
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'url': 'test'
         },
-        'type': 'GET',
-        'url': './rest/user/add/hello/pw',
+        'type': 'POST',
+        'url': './rest/watchlist/add/2',
         'dataType': 'json'
     });
 }

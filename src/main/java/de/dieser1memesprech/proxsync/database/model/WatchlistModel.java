@@ -5,26 +5,28 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.*;
-
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class UserModel implements Serializable {
-
+public class WatchlistModel implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @XmlID
     private Long id;
 
     @XmlElement
-    private String username;
+    private String url;
 
     @XmlElement
-    private String pw;
+    private Long timestamp;
 
-    public UserModel() {
+    @XmlElement
+    private Long userId;
+
+    public WatchlistModel() {
         super();
     }
 
@@ -36,19 +38,28 @@ public class UserModel implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUrl() {
+        return url;
     }
 
-    public String getPw() {
-        return pw;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
 }
