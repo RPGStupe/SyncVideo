@@ -6,10 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.persistence.CacheRetrieveMode;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 
 import com.google.common.collect.Lists;
@@ -32,8 +29,10 @@ public abstract class BaseDao<E, I> implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@PersistenceContext
-	protected EntityManager em;
+	@PersistenceContext(unitName = "syncvideoPU")
+	private EntityManager em;
+
+	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory( "syncvideoPU" );
 
 	protected final Class<?> entityClass;
 	protected boolean enableQueryCaching = true;
@@ -62,6 +61,9 @@ public abstract class BaseDao<E, I> implements Serializable
 	@Transactional
 	public void persist(E entity)
 	{
+		System.out.println("TEST: " + entityManagerFactory);
+		em = entityManagerFactory.createEntityManager();
+		System.out.println("TESTEM: " + em);
 		em.persist(checkConsistencyBeforeSave(entity));
 	}
 

@@ -5,8 +5,11 @@ import de.dieser1memesprech.proxsync.database.model.UserModel;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,12 +21,16 @@ public class UserRest {
     @Inject
     private UserDao userDao;
 
+
+
     @POST
     @Path("/add/{username}/{pw}")
     public Response add(@PathParam("username") String username, @PathParam("pw") String pw) {
-        UserModel user = new UserModel(username, pw);
-        System.out.println(user.getPw()+user.getUsername());
-        //userDao.persist(user);
+        UserModel user = new UserModel();
+        user.setUsername(username);
+        user.setPw(pw);
+        System.out.println(user.getId() + " " + user.getUsername() + " " + user.getPw());
+        userDao.persist(user);
         return Response.status(200).build();
     }
 

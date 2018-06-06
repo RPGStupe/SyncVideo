@@ -8,9 +8,8 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.CDI;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +30,9 @@ public final class Tools
 {
 	private static final Logger logger = LoggerFactory.getLogger(Tools.class);
 
-	@PersistenceContext(unitName="syncvideoPU")
+	@PersistenceContext
 	private EntityManager entityManager;
+
 
 	private static final LoadingCache<Class<?>, Method> idGetters = CacheBuilder.newBuilder().maximumSize(20)
 			.build(new CacheLoader<Class<?>, Method>()

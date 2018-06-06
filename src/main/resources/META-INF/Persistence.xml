@@ -5,8 +5,11 @@
 
     <persistence-unit name="syncvideoPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+
         <jta-data-source>java:jboss/datasources/MySqlDS</jta-data-source>
 
+        <class>de.dieser1memesprech.proxsync.database.model.UserModel</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <!-- Enable caching globally. Set @Cacheable(false) to prevent caching of entities -->
