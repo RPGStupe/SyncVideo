@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 
@@ -15,275 +17,234 @@ import com.google.common.reflect.TypeToken;
 /**
  * Abstract Data Access Object base class.
  *
+ * @param <E> Entity
+ * @param <I> Type of Identity value (primary key type)
  * @author Alexander.Auch
- *
- * @param <E>
- *          Entity
- * @param <I>
- *          Type of Identity value (primary key type)
  */
-public abstract class BaseDao<E, I> implements Serializable
-{
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+public abstract class BaseDao<E, I> implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	@PersistenceContext(unitName = "syncvideoPU")
-	private EntityManager em;
 
-	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory( "syncvideoPU" );
+    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("syncvideoPU");
 
-	protected final Class<?> entityClass;
-	protected boolean enableQueryCaching = true;
+    @PersistenceContext(unitName = "syncvideoPU")
+    private EntityManager em = entityManagerFactory.createEntityManager();
 
-	public BaseDao()
-	{
-		@SuppressWarnings("serial")
-		final TypeToken<E> type = new TypeToken<E>(getClass())
-		{
-		};
+    protected final Class<?> entityClass;
+    protected boolean enableQueryCaching = true;
 
-		entityClass = type.getRawType();
-	}
+    public BaseDao() {
+        @SuppressWarnings("serial") final TypeToken<E> type = new TypeToken<E>(getClass()) {
+        };
 
-	/**
-	 * This method can be overridden in sub classes to alter an entity before a
-	 * save operation (persist or merge).
-	 *
-	 * @return original or modified entity
-	 */
-	protected E checkConsistencyBeforeSave(E entity)
-	{
-		return entity;
-	}
+        entityClass = type.getRawType();
+    }
 
-	@Transactional
-	public void persist(E entity)
-	{
-		System.out.println("TEST: " + entityManagerFactory);
-		em = entityManagerFactory.createEntityManager();
-		System.out.println("TESTEM: " + em);
-		em.persist(checkConsistencyBeforeSave(entity));
-	}
+    /**
+     * This method can be overridden in sub classes to alter an entity before a
+     * save operation (persist or merge).
+     *
+     * @return original or modified entity
+     */
+    protected E checkConsistencyBeforeSave(E entity) {
+        return entity;
+    }
 
-	@Transactional
-	public void persist(@SuppressWarnings("unchecked") E... entities)
-	{
-		for (final E entity : entities)
-		{
-			persist(entity);
-		}
-	}
 
-	/**
-	 * Tries to determine whether the entity is new or already in the DB by
-	 * looking at its Id key.
-	 *
-	 * @param entity
-	 */
-	@Transactional
-	public void persistOrMerge(E entity)
-	{
-		if (isPersisted(entity))
-		{
-			merge(entity);
-		} else
-		{
-			persist(entity);
-		}
-	}
+    @Transactional
+    public void persist(E entity) {
+        em.persist(checkConsistencyBeforeSave(entity));
+    }
 
-	/**
-	 * Flush the entity manager.
-	 */
-	public void flush()
-	{
-		em.flush();
-	}
+    @Transactional
+    public void persist(@SuppressWarnings("unchecked") E... entities) {
+        for (final E entity : entities) {
+            persist(entity);
+        }
+    }
 
-	/**
-	 * Tries to determine whether the entity is new or already in the DB by
-	 * looking at its Id key.
-	 *
-	 * @param entity
-	 * @return true if it is persisted in the DB according to its primary key
-	 */
-	public boolean isPersisted(E entity)
-	{
-		final I id = getId(entity);
+    /**
+     * Tries to determine whether the entity is new or already in the DB by
+     * looking at its Id key.
+     *
+     * @param entity
+     */
+    @Transactional
+    public void persistOrMerge(E entity) {
+        if (isPersisted(entity)) {
+            merge(entity);
+        } else {
+            persist(entity);
+        }
+    }
 
-		return ((id != null) && ((Number) id).longValue() != 0);
-	}
+    /**
+     * Flush the entity manager.
+     */
+    public void flush() {
+        em.flush();
+    }
 
-	/**
-	 * Removes managed entities.
-	 *
-	 * @param entity
-	 */
-	@Transactional
-	public void remove(E entity)
-	{
-		em.remove(entity);
-	}
+    /**
+     * Tries to determine whether the entity is new or already in the DB by
+     * looking at its Id key.
+     *
+     * @param entity
+     * @return true if it is persisted in the DB according to its primary key
+     */
+    public boolean isPersisted(E entity) {
+        final I id = getId(entity);
 
-	/**
-	 * Removes managed and detached entities.
-	 *
-	 * @param detachedEntity
-	 */
-	@Transactional
-	public void removeDetached(E detachedEntity)
-	{
-		em.remove(reattach(detachedEntity));
-	}
+        return ((id != null) && ((Number) id).longValue() != 0);
+    }
 
-	/**
-	 * Checks whether the given entity is in the db prior to trying to delete it
-	 *
-	 * @param entity
-	 */
-	public void removeSilently(E entity)
-	{
-		if (isPersisted(entity))
-		{
-			remove(entity);
-		}
-	}
+    /**
+     * Removes managed entities.
+     *
+     * @param entity
+     */
+    @Transactional
+    public void remove(E entity) {
+        em.remove(entity);
+    }
 
-	@Transactional
-	public E merge(E entity)
-	{
-		return em.merge(checkConsistencyBeforeSave(entity));
-	}
+    /**
+     * Removes managed and detached entities.
+     *
+     * @param detachedEntity
+     */
+    @Transactional
+    public void removeDetached(E detachedEntity) {
+        em.remove(reattach(detachedEntity));
+    }
 
-	/**
-	 * Tries to find the entity for the given id.
-	 *
-	 * @param id
-	 *          id
-	 * @return entity or null if no matching entity found
-	 */
-	@SuppressWarnings("unchecked")
-	public E findById(I id)
-	{
-		return (E) em.find(entityClass, id);
-	}
+    /**
+     * Checks whether the given entity is in the db prior to trying to delete it
+     *
+     * @param entity
+     */
+    public void removeSilently(E entity) {
+        if (isPersisted(entity)) {
+            remove(entity);
+        }
+    }
 
-	/**
-	 * Tries to find an instance in the db by using the given key.
-	 *
-	 * @param fieldName
-	 *          field to search the key
-	 * @param key
-	 *          key to search
-	 * @return entity or null if none found
-	 */
-	public E findByUnique(String fieldName, Object key)
-	{
-		final String query = String.format("FROM %s e WHERE e.%s = :key", entityClass.getName(), fieldName);
+    @Transactional
+    public E merge(E entity) {
+        return em.merge(checkConsistencyBeforeSave(entity));
+    }
 
-		@SuppressWarnings("unchecked")
-		final List<E> resultList = (List<E>) cacheable(em.createQuery(query, entityClass)).setParameter("key", key)
-		.getResultList();
+    /**
+     * Tries to find the entity for the given id.
+     *
+     * @param id id
+     * @return entity or null if no matching entity found
+     */
+    @SuppressWarnings("unchecked")
+    public E findById(I id) {
+        return (E) em.find(entityClass, id);
+    }
 
-		return resultList.isEmpty() ? null : resultList.get(0);
-	}
+    /**
+     * Tries to find an instance in the db by using the given key.
+     *
+     * @param fieldName field to search the key
+     * @param key       key to search
+     * @return entity or null if none found
+     */
+    public E findByUnique(String fieldName, Object key) {
+        final String query = String.format("FROM %s e WHERE e.%s = :key", entityClass.getName(), fieldName);
 
-	@SuppressWarnings("unchecked")
-	public List<E> getAll()
-	{
-		final String query = String.format("FROM %s e", entityClass.getName());
+        @SuppressWarnings("unchecked") final List<E> resultList = (List<E>) cacheable(em.createQuery(query, entityClass)).setParameter("key", key)
+                .getResultList();
 
-		return (List<E>) cacheable(em.createQuery(query, entityClass)).getResultList();
-	}
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
 
-	@Transactional
-	public List<E> getAllFullyLoaded()
-	{
-		final List<E> all = getAll();
-		Tools.loadFully(all);
+    @SuppressWarnings("unchecked")
+    public List<E> getAll() {
+        final String query = String.format("FROM %s e", entityClass.getName());
 
-		return all;
-	}
+        return (List<E>) cacheable(em.createQuery(query, entityClass)).getResultList();
+    }
 
-	/**
-	 * Returns a list sorted by the given function. The list will be sorted by
-	 * Java, so this is an expensive operation for big lists.
-	 *
-	 * @param stringFieldExtractor
-	 *          extractor function, e.g. <code>Entity::getName</code>
-	 * @return sorted list.
-	 */
-	public List<E> getAllSortedBy(Function<E, String> stringFieldExtractor)
-	{
-		final List<E> sortedList = Lists.newArrayList(getAll());
-		Collections.sort(sortedList, Comparator.comparing(stringFieldExtractor, String.CASE_INSENSITIVE_ORDER));
+    @Transactional
+    public List<E> getAllFullyLoaded() {
+        final List<E> all = getAll();
+        Tools.loadFully(all);
 
-		return sortedList;
-	}
+        return all;
+    }
 
-	/**
-	 * Determines the primary key of the given entity by using reflection.
-	 *
-	 * @param e
-	 *          entity
-	 * @return primary key of the given entity
-	 */
-	public I getId(E e)
-	{
-		return Tools.<I> getEntityKey(e);
-	}
+    /**
+     * Returns a list sorted by the given function. The list will be sorted by
+     * Java, so this is an expensive operation for big lists.
+     *
+     * @param stringFieldExtractor extractor function, e.g. <code>Entity::getName</code>
+     * @return sorted list.
+     */
+    public List<E> getAllSortedBy(Function<E, String> stringFieldExtractor) {
+        final List<E> sortedList = Lists.newArrayList(getAll());
+        Collections.sort(sortedList, Comparator.comparing(stringFieldExtractor, String.CASE_INSENSITIVE_ORDER));
 
-	/**
-	 * Tries to find a managed entity corresponding to the given (possibly
-	 * detached) entity. If the entity is already managed, it will be returned
-	 * immediately without Db lookup, so it is safe to call this function.
-	 * <strong> Please be aware that any modifications to the given entity will
-	 * not be reflected by the returned entity, if it has to be re-loaded from the
-	 * persistence context!</strong> If the entity is not persisted nor has a
-	 * valid key, null will be returned.
-	 *
-	 * @param e
-	 *          entity
-	 * @return managed entity
-	 */
-	@Transactional
-	public E reattach(E e)
-	{
-		return em.contains(e) ? e : (isPersisted(e) ? findById(getId(e)) : null);
-	}
+        return sortedList;
+    }
 
-	/**
-	 * Reloads an entity from the database, and reattaches it if needed.
-	 *
-	 * @param e
-	 *          entity
-	 * @return refreshed entity
-	 */
-	@Transactional
-	public E refresh(E e)
-	{
-		if (em.contains(e))
-		{
-			em.refresh(e);
+    /**
+     * Determines the primary key of the given entity by using reflection.
+     *
+     * @param e entity
+     * @return primary key of the given entity
+     */
+    public I getId(E e) {
+        return Tools.<I>getEntityKey(e);
+    }
 
-			return e;
-		} else
-		{
-			return reattach(e);
-		}
-	}
+    /**
+     * Tries to find a managed entity corresponding to the given (possibly
+     * detached) entity. If the entity is already managed, it will be returned
+     * immediately without Db lookup, so it is safe to call this function.
+     * <strong> Please be aware that any modifications to the given entity will
+     * not be reflected by the returned entity, if it has to be re-loaded from the
+     * persistence context!</strong> If the entity is not persisted nor has a
+     * valid key, null will be returned.
+     *
+     * @param e entity
+     * @return managed entity
+     */
+    @Transactional
+    public E reattach(E e) {
+        return em.contains(e) ? e : (isPersisted(e) ? findById(getId(e)) : null);
+    }
 
-	/**
-	 * Sets property to enable query caching.
-	 *
-	 * @param query
-	 * @return query
-	 */
-	protected <T> TypedQuery<T> cacheable(TypedQuery<T> query)
-	{
-		return enableQueryCaching ? query.setHint("org.hibernate.cacheable", "true")
-				.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.USE) : query;
-	}
+    /**
+     * Reloads an entity from the database, and reattaches it if needed.
+     *
+     * @param e entity
+     * @return refreshed entity
+     */
+    @Transactional
+    public E refresh(E e) {
+        if (em.contains(e)) {
+            em.refresh(e);
+
+            return e;
+        } else {
+            return reattach(e);
+        }
+    }
+
+    /**
+     * Sets property to enable query caching.
+     *
+     * @param query
+     * @return query
+     */
+    protected <T> TypedQuery<T> cacheable(TypedQuery<T> query) {
+        return enableQueryCaching ? query.setHint("org.hibernate.cacheable", "true")
+                .setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.USE) : query;
+    }
 }

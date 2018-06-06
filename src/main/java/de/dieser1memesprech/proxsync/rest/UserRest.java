@@ -29,7 +29,6 @@ public class UserRest {
         UserModel user = new UserModel();
         user.setUsername(username);
         user.setPw(pw);
-        System.out.println(user.getId() + " " + user.getUsername() + " " + user.getPw());
         userDao.persist(user);
         return Response.status(200).build();
     }
@@ -64,9 +63,13 @@ public class UserRest {
 
     @GET
     @Path("/all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<UserModel> all() {
-        return userDao.getAll();
+    public String all() {
+        List<UserModel> users = userDao.getAll();
+        String s = "";
+        for (UserModel user : users) {
+            s += user.getUsername() + " " + user.getPw() + "\n";
+        }
+        return s;
     }
 
     @GET
