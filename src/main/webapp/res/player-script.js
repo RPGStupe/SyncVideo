@@ -559,19 +559,8 @@ function onMessage(event) {
                 "value": document.getElementById("auto-next-checkbox").checked
             };
             socket.send(JSON.stringify(userAction));
-            console.log("old value: " + oldNextEpisode + ", current value: " + checkbox.checked);
         }
         var playListString = buildHtmlPlaylist(eventJSON.playlist);
-        if (eventJSON.playlist[0].episode == eventJSON.playlist[0].episodeCount) {
-            document.getElementById("add-next-watchlist-button").innerHTML = "completed";
-        } else {
-            document.getElementById("add-next-watchlist-button").innerHTML = "watchlist: next";
-        }
-        if (eventJSON.playlist[0].episode > 1) {
-            document.getElementById("add-watchlist-button").innerHTML = "watchlist: this";
-        } else {
-            document.getElementById("add-watchlist-button").innerHTML = "plan to watch";
-        }
         document.getElementById("playlist-list").innerHTML = playListString;
     }
     if (eventJSON.action === "room-list") {
@@ -750,6 +739,7 @@ function addToWatchlist(next) {
 }
 
 function buildHtmlPlaylist(playList) {
+    console.log("TEST");
     var res = "";
     for (var i = 0; i < playList.length; i++) {
         res += "<li class='mdc-list-item'>" +

@@ -1,4 +1,3 @@
-<%@ page import="java.util.List" %>
 <%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
 <html language="de" class="mdc-typography">
 <head>
@@ -64,6 +63,8 @@
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script src="res/avatarChange.js"></script>
 <script>
+
+    var timeOut;
     $("#avatar-on-card").click(function () {
         $("#files").click();
     });
@@ -91,39 +92,30 @@
     }
 </script>
 <script>
-    var autoSizeText;
 
-    autoSizeText = function () {
-        var el, elements, _i, _len, _results;
-        elements = $('.resize');
-        console.log(elements);
-        if (elements.length < 0) {
-            return;
-        }
-        _results = [];
-        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-            el = elements[_i];
-            _results.push((function (el) {
-                var resizeText, _results1;
-                resizeText = function () {
-                    var elNewFontSize;
-                    elNewFontSize = (parseInt($(el).css('font-size').slice(0, -2)) - 1) + 'px';
-                    return $(el).css('font-size', elNewFontSize);
-                };
-                _results1 = [];
-                while (el.scrollHeight > el.offsetHeight) {
-                    _results1.push(resizeText());
-                }
-                return _results1;
-            })(el));
-        }
-        return _results;
-    };
-
-    $(document).ready(function () {
-        return autoSizeText();
-    });
-
+    var timeOut;
+    mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
+    var menuEl = document.querySelector('#profile-menu');
+    if (menuEl != null) {
+        var menuTop = new mdc.menu.MDCSimpleMenu(menuEl);
+        menuEl.addEventListener('MDCSimpleMenu:selected', function (evt) {
+            menuTop.open = false;
+            var detail = evt.detail;
+            switch (detail.index) {
+                case 0:
+                    followLink("/profile/");
+                    break;
+                case 1:
+                    followLink("/watchlist/");
+                    break;
+                case 2:
+                    followLink("/settings/");
+                    break;
+                case 3:
+                    signout();
+            }
+        });
+    }
 </script>
 </body>
 </html>
