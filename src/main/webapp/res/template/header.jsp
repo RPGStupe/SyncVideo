@@ -27,7 +27,7 @@
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <div id="register-row"
                      style="align-self:center;float:right;margin-right:16px;margin-left:auto;">
-                    <% if (LoginUtil.checkCookie(request, "loggedIn").equals("")) {
+                    <% if (!LoginUtil.checkCookie(request, "loggedIn").equals("true")) {
                         %>
                     <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg mdc-button--align-middle"
                             onclick="loginDialog.show()"
