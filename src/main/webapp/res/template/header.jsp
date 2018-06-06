@@ -136,7 +136,7 @@
         </header>
         <section id="my-mdc-dialog-description" class="mdc-dialog__body">
             Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-        </section>
+        </section> 
         <footer class="mdc-dialog__footer">
             <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
             <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
