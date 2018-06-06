@@ -10,7 +10,6 @@ import java.io.Serializable;
 
 @Entity
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
 public class UserModel implements Serializable {
 
     @Id
@@ -18,10 +17,8 @@ public class UserModel implements Serializable {
     @XmlID
     private Long id;
 
-    @XmlElement
     private String username;
 
-    @XmlElement
     private String pw;
 
     public UserModel() {
@@ -47,6 +44,7 @@ public class UserModel implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
     public void setPw(String pw) {
         this.pw = pw;
     }

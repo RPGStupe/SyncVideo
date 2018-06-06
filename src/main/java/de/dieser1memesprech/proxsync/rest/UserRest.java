@@ -3,6 +3,7 @@ package de.dieser1memesprech.proxsync.rest;
 import de.dieser1memesprech.proxsync.database.dao.UserDao;
 import de.dieser1memesprech.proxsync.database.model.UserModel;
 import de.dieser1memesprech.proxsync.util.RandomString;
+import de.dieser1memesprech.proxsync.user.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class UserRest {
     public static Map<String, Long> sessionToUid = new HashMap<>();
 
 
-    @GET
+    @POST
     @Path("/add/{username}/{pw}")
     public Response add(@PathParam("username") String username, @PathParam("pw") String pw) {
         UserModel user = new UserModel();
@@ -36,7 +37,7 @@ public class UserRest {
         return Response.status(200).build();
     }
 
-    @GET
+    @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,13 +65,9 @@ public class UserRest {
 
     @GET
     @Path("/all")
-    public String all() {
-        List<UserModel> users = userDao.getAll();
-        String s = "";
-        for (UserModel user : users) {
-            s += user.getUsername() + " " + user.getPw() + "\n";
-        }
-        return s;
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserModel> All(){
+    	return userDao.getAll();
     }
 
     @GET
