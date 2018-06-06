@@ -131,16 +131,22 @@
     <div class="mdc-dialog__surface">
         <header class="mdc-dialog__header">
             <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
-                Use Google's location service?
+                Login
             </h2>
         </header>
         <section id="my-mdc-dialog-description" class="mdc-dialog__body">
-            Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-        </section> 
-        <footer class="mdc-dialog__footer">
-            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
-            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
-        </footer>
+            <div class="mdc-text-field">
+                <label class="mdc-floating-label" for="username-text-field">Username</label>
+                <input type="text" id="username-text-field" class="mdc-text-field__input">
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-text-field">
+                <label class="mdc-floating-label" for="password-text-field">Password</label>
+                <input type="password" id="password-text-field" class="mdc-text-field__input">
+                <div class="mdc-line-ripple"></div>
+            </div>
+        </section>
+        <button type="button" class="mdc-button" onclick="login()">Login</button>
     </div>
     <div class="mdc-dialog__backdrop"></div>
 </aside>
@@ -159,6 +165,18 @@
         });
     }
 
-    let loginDialog = new mdc.menu.MDCDialog(document.querySelector('#login-mdc-dialog'));
-    console.log(loginDialog);
+    function login() {
+        console.log(document.getElementById('password-text-field').value);
+        jQuery.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            'type': 'GET',
+            'url': './rest/user/login/' + document.getElementById('username-text-field').value + "/" + document.getElementById('password-text-field').value,
+            'dataType': 'json'
+        });
+    }
+
+    let loginDialog = new mdc.dialog.MDCDialog(document.querySelector('#login-mdc-dialog'));
 </script>
