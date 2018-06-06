@@ -20,7 +20,7 @@ public class WatchlistRest {
     @POST
     @Path("/add")
     public Response add(@CookieParam("sessionId") String sessionId, @HeaderParam("url") String url) {
-        if(sessionId != null) {
+        if(UserRest.sessionToUid.get(sessionId) != null) {
             WatchlistModel watchlistModel = new WatchlistModel();
             watchlistModel.setUserId(UserRest.sessionToUid.get(sessionId));
             watchlistModel.setUrl(url);

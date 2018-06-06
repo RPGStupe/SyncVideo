@@ -4,7 +4,7 @@
     <div class="mdc-toolbar__row">
         <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
             <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg"
-                    onclick="followLink('${pageContext.request.contextPath}');"
+                    onclick='followLink("${pageContext.request.contextPath}");'
                     id="leave-button"
                     style="align-self: center;margin-left:16px;margin-right: 16px;">New Room
             </button>

@@ -33,8 +33,7 @@ public class UserRest {
     	userDao.persist(user);
 		return Response.status(200).build();
     }
-    
-    
+
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
