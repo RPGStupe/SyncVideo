@@ -20,6 +20,8 @@ public class UserModel implements Serializable {
     private String username;
 
     private String pw;
+    private String banner;
+    private String Avatar;
 
     public UserModel() {
         super();
@@ -48,4 +50,20 @@ public class UserModel implements Serializable {
     public void setPw(String pw) {
         this.pw = pw;
     }
+
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
+	}
+
+	public String getAvatar() {
+		return Avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		Avatar = avatar;
+	}
 }
