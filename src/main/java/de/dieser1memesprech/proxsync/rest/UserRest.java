@@ -67,6 +67,24 @@ public class UserRest {
     	return userDao.getAll();
     }
 
+    @POST
+    @Path("/picture/avatar")
+    public Response changeAvatar(@HeaderParam("url") String url, @CookieParam("sessionId") String sessionId) {
+        UserModel user = userDao.findByUnique("id", sessionToUid.get(sessionId));
+        user.setAvatar(url);
+        userDao.merge(user);
+        return Response.status(200).build();
+    }
+
+    @POST
+    @Path("/picture/banner")
+    public Response changeBanner(@HeaderParam("url") String url, @CookieParam("sessionId") String sessionId) {
+        UserModel user = userDao.findByUnique("id", sessionToUid.get(sessionId));
+        user.setBanner(url);
+        userDao.merge(user);
+        return Response.status(200).build();
+    }
+
     @GET
     @Path("/login/{username}/{pw}")
     public Response login(@PathParam("username") String name, @PathParam("pw") String password)
