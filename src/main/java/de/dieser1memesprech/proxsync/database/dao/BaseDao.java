@@ -151,8 +151,29 @@ public abstract class BaseDao<E, I> implements Serializable {
     }
 
     @Transactional
-    public E merge(E entity) {
-        return em.merge(checkConsistencyBeforeSave(entity));
+    public void merge(E entity) {
+    	
+    	 UserTransaction transaction = null;
+         try {
+             transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+             transaction.begin();
+             em.merge(checkConsistencyBeforeSave(entity));
+             transaction.commit();
+         } catch (NamingException e) {
+             e.printStackTrace();
+         } catch (NotSupportedException e) {
+             e.printStackTrace();
+         } catch (SystemException e) {
+             e.printStackTrace();
+         } catch (RollbackException e) {
+             e.printStackTrace();
+         } catch (HeuristicMixedException e) {
+             e.printStackTrace();
+         } catch (HeuristicRollbackException e) {
+             e.printStackTrace();
+         }
+    	
+        //return em.merge(checkConsistencyBeforeSave(entity));
     }
 
     /**
