@@ -171,6 +171,8 @@
 <script src="res/tab-switch.js?v=0.1"></script>
 <script src="res/Youtube.js"></script>
 <script>
+
+    var timeOut;
     mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
     var menuEl = document.querySelector('#profile-menu');
     if (menuEl != null) {

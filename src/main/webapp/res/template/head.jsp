@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet"
       href="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.css">
-<link rel="stylesheet" href="../SyncVideo/res/theme-standard.css">
-<link rel="stylesheet" href="../SyncVideo/res/style.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/theme-standard.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/style.css">
 <link rel="stylesheet" href="res/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">

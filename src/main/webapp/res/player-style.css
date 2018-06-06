@@ -1,8 +1,3 @@
-.video-js {
-    min-width: 100%;
-    min-height: 100%;
-}
-
 /*
   Player Skin Designer for Video.js
   http://videojs.com
@@ -44,25 +39,17 @@
     /* The font size is what makes the big play button...big.
        All width/height values use ems, which are a multiple of the font size.
        If the .video-js font-size is 10px, then 3em equals 30px.*/
-    font-size: 7em;
-    /* We're using SCSS vars here because the values are used in multiple places.
-       Now that font size is set, the following em values will be a multiple of the
-       new font size. If the font-size is 3em (30px), then setting any of
-       the following values to 3em would equal 30px. 3 * font-size. */
-    /* 1.5em = 45px default */
-    line-height: 1.2em;
-    height: 1.2em;
-    width: 1.2em;
-    /* 0.06666em = 2px default */
-    border: 0em solid #fff;
-    /* 0.3em = 9px default */
-    border-radius: 10em;
-    /* Align center */
-    left: 50%;
-    top: 50%;
-    margin-left: -0.6em;
-    margin-top: -0.6em;
-    background-color: rgba(43, 51, 63, 0);
+    font-size: 7em!important;
+    line-height: 1.2em!important;
+    height: 1.2em!important;
+    width: 1.2em!important;
+    border: 0 solid #fff!important;
+    border-radius: 10em!important;
+    left: 50%!important;
+    top: 50%!important;
+    margin-left: -.6em!important;
+    margin-top: -.6em!important;
+    background-color: rgba(43,51,63,0)!important;
 }
 
 /* The default color of control backgrounds is mostly black but with a little
