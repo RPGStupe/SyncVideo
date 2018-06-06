@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.*;

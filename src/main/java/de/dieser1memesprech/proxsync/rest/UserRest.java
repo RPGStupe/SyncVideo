@@ -2,16 +2,18 @@ package de.dieser1memesprech.proxsync.rest;
 
 import de.dieser1memesprech.proxsync.database.dao.UserDao;
 import de.dieser1memesprech.proxsync.database.model.UserModel;
+import de.dieser1memesprech.proxsync.util.RandomString;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 
@@ -21,6 +23,7 @@ public class UserRest {
     @Inject
     private UserDao userDao;
 
+    public static Map<String, Long> sessionToUid = new HashMap<>();
 
 
     @GET
@@ -46,10 +49,8 @@ public class UserRest {
     @Path("/getbyid/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public UserModel getById(@PathParam("id") Long id) {
-
         UserModel user = userDao.findById(id);
         return user;
-
     }
 
     @DELETE
@@ -76,6 +77,21 @@ public class UserRest {
     @Path("/test")
     public String test() {
         return "TEST";
+    }
+
+    @GET
+    @Path("/login/{username}/{pw}")
+    public Response login(@PathParam("username") String name, @PathParam("pw") String password)
+    {
+        UserModel user = userDao.findByUnique("username", name);
+        if (user != null) {
+            if (password.equals(user.getPw())) {
+                String sessionId = UUID.randomUUID().toString();
+                sessionToUid.put(sessionId, user.getId());
+                return Response.status(200).cookie(new NewCookie("sessionId", sessionId)).build();
+            }
+        }
+        return Response.status(501).build();
     }
 
 }

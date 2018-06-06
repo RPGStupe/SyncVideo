@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
 <html language="de" class="mdc-typography">
 <head>
     <%@include file="../res/template/head.jsp" %>
@@ -36,7 +37,8 @@
         </nav>
     </nav>
     <main class="main">
-        <% if (!"".equals(uid)) {%>
+        <%
+            if (!LoginUtil.CheckCookie(request, "sessionId").equals("")) {%>
         <div class="mdc-card mdc-card--theme-dark user-card"
              id="banner-div"
              style="background-image: url(https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/banner-default.png?alt=media&token=424d9e70-d360-4842-94ca-133ba9bb71ec);">

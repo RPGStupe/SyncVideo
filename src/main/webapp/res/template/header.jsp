@@ -1,3 +1,4 @@
+<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
 <header id="page-header"
         class="mdc-toolbar mdc-toolbar--fixed">
     <div class="mdc-toolbar__row">
@@ -26,13 +27,16 @@
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <div id="register-row"
                      style="align-self:center;float:right;margin-right:16px;margin-left:auto;">
+                    <% if (LoginUtil.CheckCookie(request, "sessionId").equals("")) {
+                        %>
                     <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg mdc-button--align-middle"
-                            onclick="register()"
+                            onclick="loginDialog.show()"
                             id="register-button"
                             style="
                                     align-self: center;
                                     margin-left:10px;">Sign in
                     </button>
+                    <% } else {%>
                 </div>
                 <div id="signout-row" style="align-self: center; margin-right: 16px; margin-left: auto;">
                     <div style="float:right;" onmouseover="clearTimeout(timeOut); menuTop.open = true;"
@@ -64,7 +68,7 @@
                                 </li>
                                 <li class="mdc-list-divider" role="separator"></li>
                                 <li class="mdc-list-item profile-list" role="menuitem" tabindex="0"
-                                    onclick="signout();">
+                                    onclick="logout();">
                                     <span style="align-self:center;">Sign Out</span>
                                 </li>
                             </ul>
@@ -114,7 +118,39 @@
                     <span id="welcome-msg" class="mdc-toolbar__title"
                           style="margin-top:4px;float:right;align-self:center;"></span>
                 </div>
+                <% }%>
             </section>
         </section>
     </div>
 </header>
+<aside id="login-mdc-dialog"
+       class="mdc-dialog"
+       role="alertdialog"
+       aria-labelledby="my-mdc-dialog-label"
+       aria-describedby="my-mdc-dialog-description">
+    <div class="mdc-dialog__surface">
+        <header class="mdc-dialog__header">
+            <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
+                Use Google's location service?
+            </h2>
+        </header>
+        <section id="my-mdc-dialog-description" class="mdc-dialog__body">
+            Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+        </section>
+        <footer class="mdc-dialog__footer">
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
+        </footer>
+    </div>
+    <div class="mdc-dialog__backdrop"></div>
+</aside>
+
+<script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
+<script>
+    function logout() {
+        // TODO
+    }
+
+    let loginDialog = new mdc.menu.MDCDialog(document.querySelector('#login-mdc-dialog'));
+    console.log(loginDialog);
+</script>

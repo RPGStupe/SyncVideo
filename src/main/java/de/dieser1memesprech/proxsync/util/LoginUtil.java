@@ -8,24 +8,24 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Jeremias on 19.09.2017.
  */
 public class LoginUtil {
-    public static String getUid(HttpServletRequest request) {
-        boolean anonymous = true;
-        String res = "";
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if(cookie.getName().equals("anonymous")) {
-                    anonymous = Boolean.parseBoolean(cookie.getValue());
-                }
-                if (cookie.getName().equals("loginData")) {
-                    res = cookie.getValue();
+    public static String CheckCookie(HttpServletRequest req, String name)
+    {
+        String SearchString;
+        Cookie cookie[] = req.getCookies();
+        SearchString=name;
+
+        if(cookie!=null) //There are cookies
+        {
+            for(int i =0 ; i<cookie.length ; i++)
+            {
+                Cookie tempCookie= cookie[i];
+
+                if(tempCookie.getName().equals(SearchString))
+                {
+                    return tempCookie.getValue();
                 }
             }
         }
-        if(!anonymous) {
-            return res;
-        } else {
-            return "";
-        }
+        return ""; //this means no cookies were found
     }
 }
