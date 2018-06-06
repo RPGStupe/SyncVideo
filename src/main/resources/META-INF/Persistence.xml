@@ -31,8 +31,9 @@
             <!-- see http://www.mastertheboss.com/jboss-frameworks/hibernate-jpa/hibernate-cache/using-hibernate-second-level-cache-with-jboss-as-5-6-7 -->
             <!-- Cache Provider needs not to be configured when using Wildfly, since it uses Infinispan -->
             <!-- Enable second level and query cache -->
-            <property name="hibernate.cache.use_second_level_cache" value="true" />
-            <property name="hibernate.cache.use_query_cache" value="true" />
+            <property name="hibernate.cache.use_second_level_cache" value="false" />
+            <property name="hibernate.cache.use_query_cache" value="false" />
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
 
         </properties>
     </persistence-unit>

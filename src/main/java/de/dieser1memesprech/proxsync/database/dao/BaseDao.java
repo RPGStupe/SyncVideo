@@ -8,8 +8,11 @@ import java.util.function.Function;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.*;
-import javax.transaction.Transactional;
+import javax.transaction.*;
+import javax.transaction.RollbackException;
 
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
@@ -28,9 +31,8 @@ public abstract class BaseDao<E, I> implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("syncvideoPU");
+    private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("syncvideoPU");
 
-    @PersistenceContext(unitName = "syncvideoPU")
     private EntityManager em = entityManagerFactory.createEntityManager();
 
     protected final Class<?> entityClass;
@@ -56,7 +58,25 @@ public abstract class BaseDao<E, I> implements Serializable {
 
     @Transactional
     public void persist(E entity) {
-        em.persist(checkConsistencyBeforeSave(entity));
+        UserTransaction transaction = null;
+        try {
+            transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+            transaction.begin();
+            em.persist(checkConsistencyBeforeSave(entity));
+            transaction.commit();
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } catch (NotSupportedException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        } catch (RollbackException e) {
+            e.printStackTrace();
+        } catch (HeuristicMixedException e) {
+            e.printStackTrace();
+        } catch (HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
     }
 
     @Transactional
