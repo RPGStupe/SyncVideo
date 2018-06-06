@@ -8,20 +8,11 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Jeremias on 19.09.2017.
  */
 public class LoginUtil {
-    public static String CheckCookie(HttpServletRequest req, String name)
-    {
-        String SearchString;
+    public static String checkCookie(HttpServletRequest req, String searchString) {
         Cookie cookie[] = req.getCookies();
-        SearchString=name;
-
-        if(cookie!=null) //There are cookies
-        {
-            for(int i =0 ; i<cookie.length ; i++)
-            {
-                Cookie tempCookie= cookie[i];
-
-                if(tempCookie.getName().equals(SearchString))
-                {
+        if(cookie!=null) { //There are cookies
+            for (Cookie tempCookie : cookie) {
+                if (tempCookie.getName().equals(searchString)) {
                     return tempCookie.getValue();
                 }
             }

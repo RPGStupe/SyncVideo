@@ -27,7 +27,7 @@
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <div id="register-row"
                      style="align-self:center;float:right;margin-right:16px;margin-left:auto;">
-                    <% if (LoginUtil.CheckCookie(request, "sessionId").equals("")) {
+                    <% if (LoginUtil.checkCookie(request, "loggedIn").equals("")) {
                         %>
                     <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg mdc-button--align-middle"
                             onclick="loginDialog.show()"
@@ -148,7 +148,15 @@
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
 <script>
     function logout() {
-        // TODO
+        jQuery.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': './rest/user/logout',
+            'dataType': 'json'
+        });
     }
 
     let loginDialog = new mdc.menu.MDCDialog(document.querySelector('#login-mdc-dialog'));

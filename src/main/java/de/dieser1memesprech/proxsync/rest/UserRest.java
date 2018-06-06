@@ -71,12 +71,6 @@ public class UserRest {
     }
 
     @GET
-    @Path("/test")
-    public String test() {
-        return "TEST";
-    }
-
-    @GET
     @Path("/login/{username}/{pw}")
     public Response login(@PathParam("username") String name, @PathParam("pw") String password)
     {
@@ -85,10 +79,21 @@ public class UserRest {
             if (password.equals(user.getPw())) {
                 String sessionId = UUID.randomUUID().toString();
                 sessionToUid.put(sessionId, user.getId());
-                return Response.status(200).cookie(new NewCookie("sessionId", sessionId)).build();
+                return Response.status(200)
+                        .cookie(new NewCookie("sessionId", sessionId))
+                        .cookie(new NewCookie("loggedIn", "true"))
+                        .build();
             }
         }
         return Response.status(501).build();
     }
 
+    @POST
+    @Path("/logout")
+    public Response logout(@CookieParam("sessionId") String sessionId) {
+        sessionToUid.remove(sessionId);
+        return Response.status(200)
+                .cookie(new NewCookie("loogedIn", "false"))
+                .build();
+    }
 }
