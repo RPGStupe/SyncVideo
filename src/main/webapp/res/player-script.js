@@ -831,7 +831,7 @@ function copyInviteLink() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        'type': 'POST',
+        'type': 'GET',
         'url': './rest/user/add/hello/pw',
         'dataType': 'json'
     });

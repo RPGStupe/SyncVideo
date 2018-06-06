@@ -23,7 +23,7 @@ public class UserRest {
 
 
 
-    @POST
+    @GET
     @Path("/add/{username}/{pw}")
     public Response add(@PathParam("username") String username, @PathParam("pw") String pw) {
         UserModel user = new UserModel();
@@ -33,7 +33,7 @@ public class UserRest {
         return Response.status(200).build();
     }
 
-    @POST
+    @GET
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
