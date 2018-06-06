@@ -25,18 +25,16 @@ public class UserRest {
     private UserDao userDao;
 
     public static Map<String, Long> sessionToUid = new HashMap<>();
-
-
+    
     @POST
-    @Path("/add/{username}/{pw}")
-    public Response add(@PathParam("username") String username, @PathParam("pw") String pw) {
-        UserModel user = new UserModel();
-        user.setUsername(username);
-        user.setPw(pw);
-        userDao.persist(user);
-        return Response.status(200).build();
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response add(UserModel user) {
+    	userDao.persist(user);
+		return Response.status(200).build();
     }
-
+    
+    
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
