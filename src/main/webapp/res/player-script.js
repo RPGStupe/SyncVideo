@@ -9,10 +9,8 @@ new_uri += loc.pathname + "actions";
 var socket = new WebSocket(new_uri);
 
 socket.onmessage = onMessage;
-var inSearchField = false;
 var isOwner = true;
 var roomJoined = false;
-var blurred = true;
 var syncing = false;
 var startTime;
 var roomId;
@@ -22,9 +20,6 @@ var firstVideo = true;
 var timeUpdate = false;
 var pauseFlag = true;
 var finishedFlag = false;
-var oldNextEpisode = true;
-let menu = new mdc.menu.MDCSimpleMenu(document.querySelector('#search-menu'));
-const snackbar = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 var userCount = 0;
 
 
@@ -59,11 +54,6 @@ if (getQueryVariable("r") === null) {
 
     } else {
         socket.onopen = createRoom;
-    }
-    var id = getQueryVariable("id");
-    var episode = getQueryVariable("episode");
-    if (id !== null) {
-        loadVideoByEpisode("https://9anime.to/watch/" + id, episode === null ? 1 : parseInt(episode));
     }
 } else {
     if (socket.readyState === socket.OPEN) {
@@ -162,13 +152,6 @@ var onloadExecuted = false;
 function onloadFunction() {
     onload = true;
     initCheckbox();
-    // mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
-    // document.getElementById("url-field").style.display = 'none';
-    // document.getElementById("url-button").style.display = 'none';
-    // document.getElementById("invite-link").style.display = 'none';
-    // document.getElementById("invite-button").style.display = 'none';
-    // document.getElementById("auto-next-container").style.display = 'none';
-    // document.getElementById("auto-play-container").style.display = 'none';
     checkCookie();
 }
 
@@ -180,6 +163,7 @@ $('#url-button').on('keyup', function (e) {
     }
 });
 
+// play and pause with spacebar if you are owner of the room
 $(document).on('keydown', function (e) {
     var nodeName = e.target.nodeName;
     if ('INPUT' == nodeName || 'TEXTAREA' == nodeName || e.target.title === "Play" || e.target.title === 'Pause') {
@@ -197,17 +181,21 @@ $(document).on('keydown', function (e) {
     }
 });
 
+// hide play button
 function hidePlayButtons() {
     myPlayer.removeChild('BigPlayButton');
     var children = myPlayer.children();
     children[5].removeChild('PlayToggle');
 }
 
+// show special controls on the player for the owner
 function showSpecialControl() {
     addSkipButton();
     document.getElementById("room-name-changer").style.display = "";
 }
 
+// add a button that skips 90 seconds of the video (only owner)
+// this is used for example when watching a show with an intro or outro
 function addSkipButton() {
     var videoJsButtonClass = videojs.getComponent('Button');
     var concreteButtonClass = videojs.extend(videoJsButtonClass, {
@@ -229,6 +217,7 @@ function addSkipButton() {
     buttonDOM[0].firstChild.innerHTML = "<img src=\"" + loc + "res/skip.png\" height='14' align='middle'></img>";
 }
 
+// show the play buttons
 function showPlayButtons() {
     myPlayer.addChild('BigPlayButton', {}, 3);
     myPlayer.getChild('ControlBar').addChild('PlayToggle', {}, 0);
@@ -237,14 +226,6 @@ function showPlayButtons() {
         playButton.toggleClass("vjs-playing");
         playButton.toggleClass("vjs-paused");
     }
-}
-
-function hideElement(elementId) {
-    document.getElementById(elementId).style.disPlay = 'none';
-}
-
-function showElement(elementId) {
-    document.getElementById(elementId).style.display = '';
 }
 
 const uid = makeid();
@@ -264,6 +245,7 @@ function createRoom() {
     }
 }
 
+// create a random string of 5 characters
 function makeid() {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -281,42 +263,6 @@ function bindTimeUpdate() {
 function unbindTimeUpdate() {
     timeUpdate = false;
 }
-
-function joinRoom() {
-    if (!roomJoined) {
-        isOwner = false;
-        var id = document.getElementById("room-id-in").value;
-        var userAction = {
-            action: "join",
-            name: getCookie("username"),
-            uid: uid,
-            anonymous: anonymous,
-            id: id
-        };
-        socket.send(JSON.stringify(userAction));
-    }
-}
-
-function searchRequest(keyword, old) {
-    console.log(keyword === old);
-    if (keyword === old && keyword != "") {
-        var userAction = {
-            action: "search",
-            keyword: keyword
-        };
-        socket.send(JSON.stringify(userAction));
-    } else {
-        $("#mdc-search-list").animate({scrollTop: 0}, "fast");
-        $('#mdc-search-list').addClass("hidden");
-    }
-}
-
-$('#tf-box-search-field').on('input', function () {
-    var old = document.getElementById("tf-box-search-field").value;
-    setTimeout(function () {
-        searchRequest(document.getElementById("tf-box-search-field").value, old);
-    }, 400);
-});
 
 function leaveRoom() {
     window.location = window.location.pathname;
@@ -364,17 +310,6 @@ function loadVideo() {
         'url': './rest/watchlist/add/',
         'dataType': 'json'
     });
-}
-
-function loadVideoByEpisode(name, episode) {
-    if (isOwner) {
-        var userAction = {
-            action: "episodeLink",
-            name: name,
-            episode: episode
-        };
-        socket.send(JSON.stringify(userAction));
-    }
 }
 
 function onMessage(event) {
@@ -467,15 +402,6 @@ function onMessage(event) {
             }
         }
         firstVideo = false;
-        //syncing = true;
-        //setTimeout(myPlayer.play,20);
-        //setTimeout(function() { syncing = false; }, 20);
-        //setTimeout(myPlayer.pause,20);
-    }
-
-    if (eventJSON.action === "animeInfo") {
-        document.getElementById("anime-title").innerHTML = "" + eventJSON.title + ", Episode: " + eventJSON.episode
-            + "/" + eventJSON.episodeCount;
     }
 
     if (eventJSON.action === "newRoomId") {
@@ -525,7 +451,7 @@ function onMessage(event) {
         document.getElementById("playlist-list").innerHTML = playListString;
     }
     if (eventJSON.action === "room-list") {
-        var roomString = buildHtmlList(eventJSON.userList);
+        var roomString = buildHtmlUserlist(eventJSON.userList);
         userCount = eventJSON.userList.length;
         if (userCount > 1) {
             window.history.pushState({}, null, '?r=' + roomId);
@@ -533,17 +459,6 @@ function onMessage(event) {
             window.history.pushState({}, null, location.protocol + '//' + location.host + location.pathname);
         }
         document.getElementById("user-list").innerHTML = "" + roomString;
-    }
-    if (eventJSON.action === "search-result") {
-        var resultSearchString = buildHtmlListSearch(eventJSON.result);
-        document.getElementById("mdc-search-list").innerHTML = resultSearchString;
-    }
-    if (eventJSON.action === "watchlist-oncomplete") {
-
-        const dataObj = {
-            message: "Successfully added " + eventJSON.anime + " to your watchlist"
-        };
-        snackbar.show(dataObj);
     }
 }
 
@@ -574,140 +489,12 @@ $(document).on("keypress", "#room-name-in", function (e) {
     }
 });
 
-function addSearchResultToPlaylist(url) {
-    if (isOwner) {
-        var userAction = {
-            action: "video",
-            url: url
-        };
-        socket.send(JSON.stringify(userAction));
-    }
-}
-
-Number.prototype.pad = function (size) {
-    size = Math.max(size, 2);
-    var s = String(this);
-    while (s.length < (size || 2)) {
-        s = "0" + s;
-    }
-    return s;
-};
-
-function buildHtmlListSearch(resultList) {
-    var res = "";
-    for (var i = 0; i < resultList.length; i++) {
-        res = res + "<li class='mdc-list-item list-item-search' role='menuitem' aria-disabled=\"true\">" +
-            "<img style='height:78px;padding-right:14px;' src='" + resultList[i].image + "' role='presentation'/>";
-        res += "<span class='mdc-list-item__text'>" + resultList[i].title + "";
-        res += "<span class='episode-text-span'>";
-        if (resultList[i].episodeCount > 0) {
-            for (var j = 1; j <= resultList[i].episodeCount; j++) {
-                res += "<a href='#' class='text square-box mdc-toolbar__icon";
-                if (resultList[i].watchlist + 1 > j) {
-                    res += " mdc-theme--secondary-dark-bg'";
-                } else {
-                    if (j > resultList[i].lastEpisode) {
-                        res += " mdc-theme--primary-bg'";
-                    } else {
-                        res += " mdc-theme--secondary-bg'";
-                    }
-                }
-                res += "onclick='addSearchEpisodeToPlaylist(event,\"" + resultList[i].link + "\"," + j + ");'>" +
-                    "<b> " +
-                    (j).pad(resultList[i].episodeCount.toString().length) +
-                    " </b></a>";
-                if (j % 10 === 0) {
-                    res += "<br/>";
-                }
-            }
-        } else if (resultList[i].episodeCount === "?") {
-            for (var j = 1; j <= resultList[i].lastEpisode; j++) {
-                res += "<a href='#' class='text square-box mdc-toolbar__icon";
-                if (resultList[i].watchlist + 1 > j) {
-                    res += " mdc-theme--secondary-dark-bg'";
-                } else {
-                    if (j > resultList[i].lastEpisode) {
-                        res += " mdc-theme--primary-bg'";
-                    } else {
-                        res += " mdc-theme--secondary-bg'";
-                    }
-                }
-                res += "onclick='addSearchEpisodeToPlaylist(event,\"" + resultList[i].link + "\"," + j + ");'>" +
-                    "<b> " +
-                    (j).pad(resultList[i].episodeCount.toString().length) +
-                    " </b></a>";
-                if (j % 10 === 0) {
-                    res += "<br/>";
-                }
-            }
-            res += "<a href='#' class='text square-box mdc-toolbar__icon";
-            res += " mdc-theme--primary-bg'";
-            res += "><b> ? </b></a>";
-        }
-        else {
-            res += "<a href='#' class='text square-box mdc-toolbar__icon  mdc-theme--secondary-bg' " +
-                "onclick='addSearchResultToPlaylist(\"" + resultList[i].link + "\");'>" +
-                "<b>" +
-                "load" +
-                "</b></a>";
-        }
-        res += "</span></span>";
-        if (i != resultList.length - 1) {
-            res = res + "</li>" +
-                "<hr class=\"mdc-list-divider\">";
-        }
-    }
-    if (res === "") {
-        menu.open = false;
-    } else {
-        menu.open = true;
-    }
-    $("#mdc-search-list").animate({scrollTop: 0}, "fast");
-    if (res === "") {
-        $('#mdc-search-list').addClass("hidden");
-    } else {
-        $('#mdc-search-list').removeClass("hidden");
-        setTimeout(function () {
-            document.getElementById("tf-box-search-field").focus();
-        }, 80);
-    }
-    if (document.getElementById("tf-box-search-field").value === "") {
-        $('#mdc-search-list').addClass("hidden");
-    }
-    return res;
-}
-
-function addSearchEpisodeToPlaylist(event, url, episode) {
-    if (isOwner) {
-        var userAction = {
-            action: "episodeLink",
-            url: url,
-            episode: episode
-        };
-        socket.send(JSON.stringify(userAction));
-    }
-    event.preventDefault();
-}
-
-function addToWatchlist(next) {
-    if (!anonymous) {
-        var userAction = {
-            action: "addToWatchlist",
-            next: next
-        };
-        socket.send(JSON.stringify(userAction));
-    }
-}
-
 function buildHtmlPlaylist(playList) {
     var res = "";
     for (var i = 0; i < playList.length; i++) {
         res += "<li class='mdc-list-item'>" +
             "<img style='height:78px;padding-right:14px;' src='" + "https://blog.majestic.com/wp-content/uploads/2010/10/Video-Icon-crop.png" + "' role='presentation'></img>";
         res += "<span class='mdc-list-item__text'>" + playList[i].title;
-        if (playList[i].episode !== 0) {
-            res += ", " + playList[i].episode + "/" + playList[i].episodeCount;
-        }
         res += "<span class='mdc-list-item__text__secondary'>" + playList[i].episodeTitle + "</span></span>";
         res += "<a href='#' class='mdc-list-item__end-detail material-icons' " +
             "aria-label='Play now' title='Play now'" +
@@ -747,13 +534,13 @@ function deleteFromPlaylist(e, i) {
     return false;
 }
 
-function buildHtmlList(userList) {
+function buildHtmlUserlist(userList) {
     var res = "";
     userCount = userList.length;
     for (var i = 0; i < userList.length; i++) {
         res = res + "<li class=\"mdc-list-item list-item-user\">" +
             "<img class=\"mdc-list-item__start-detail grey-bg\" src=\"" + userList[i].avatar + "\"" +
-            "width=\"56\" height=\"56\" alt=\"Brown Bear\">";
+            "width=\"56\" height=\"56\">";
         if (userList[i].uid === uid) {
             res += "<span id='user-self' style=\"display: block; margin-right: 16px\">" + userList[i].name + "</span>";
             res += "<div id='user-self-field' class=\"mdc-form-field\" style='display: none'>" +
@@ -813,13 +600,13 @@ myPlayer.on('ended', function () {
         unbindPauseEvent();
         if (isOwner) {
             unbindTimeUpdate();
-            nextEpisode();
+            nextVideo();
         }
         unbindFinishedEvent();
     }
 });
 
-function nextEpisode() {
+function nextVideo() {
     var userAction = {
         "action": "finished"
     };
@@ -874,10 +661,6 @@ function sendBufferedInd() {
         readyState: myPlayer.readyState()
     };
     socket.send(JSON.stringify(userAction));
-}
-
-function handleSeekEvent() {
-
 }
 
 function handlePlayEvent() {

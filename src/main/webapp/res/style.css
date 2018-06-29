@@ -8,13 +8,6 @@
     color:#F5F5F6;
 }
 
-.search-dialog {
-    display: block;
-}
-.search-dialog.hidden {
-    display: none;
-}
-
 .square-box {
     display: inline-block;
     margin: 2px 6px 2px 1px;

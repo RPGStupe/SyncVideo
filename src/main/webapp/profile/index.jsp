@@ -6,30 +6,9 @@
 <body class="mdc-theme--background mdc-typography adjusted-body">
 <%@include file="../res/template/header.jsp" %>
 <div class="content mdc-toolbar-fixed-adjust">
-    <div class="mdc-simple-menu" id="search-menu" tabindex="-1">
-        <ul class="mdc-dialog__body--scrollable mdc-simple-menu__items mdc-list mdc-list--avatar-list menu-search"
-            role="menu" id="mdc-search-list">
-        </ul>
-    </div>
-    <nav class="mdc-permanent-drawer">
-        <nav class="mdc-list mdc-drawer__content">
-            <a class="mdc-list-item left-list mdc-permanent-drawer--selected" href="../profile">
-                <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">person</i><span
-                    class="text-in-list">Profile</span>
-            </a>
-            <a class="mdc-list-item left-list" href="../">
-                <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">ondemand_video</i><span
-                    class="text-in-list">SyncVideo</span>
-            </a>
-            <a class="mdc-list-item left-list" href="../settings">
-                <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">settings</i><span
-                    class="text-in-list">Settings</span>
-            </a>
-        </nav>
-    </nav>
     <main class="main">
         <%
-            if (!LoginUtil.checkCookie(request, "sessionId").equals("")) {%>
+            if (!LoginUtil.checkCookie(request, "sessionId").equals("") && LoginUtil.checkCookie(request, "loggedIn").equals("true")) {%>
         <div class="mdc-card mdc-card--theme-dark user-card"
              id="banner-div">
             <button class="mdc-fab material-icons" id="banner-button" aria-label="Favorite" onclick="bannerDialog.show()">
@@ -38,7 +17,7 @@
                 </span>
             </button>
             <section class="mdc-card__primary" style="width:auto;">
-                <img class="user-card__avatar" id="avatar-on-card" src="https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/panda.svg?alt=media&token=6f4d5bf1-af69-4211-994d-66655456d91a" onclick="avatarDialog.show()">
+                <img class="user-card__avatar" id="avatar-on-card" src="" onclick="avatarDialog.show()">
                 <h1 class="mdc-card__title mdc-card__title--large" id="user-name">&nbsp;</h1>
                 <h2 class="mdc-card__subtitle"></h2>
             </section>
@@ -105,7 +84,6 @@
     <div class="mdc-dialog__backdrop"></div>
 </aside>
 <script src="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.js"></script>
-<script src="res/avatarChange.js"></script>
 <script>
 </script>
 <script>

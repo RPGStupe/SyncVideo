@@ -14,22 +14,11 @@
             pointer-events: none;
         }
     </style>
-    <link rel="stylesheet" href="res/template.css">
 </head>
 <body class="mdc-theme--background">
 <%@include file="res/template/header.jsp" %>
 <main class="mdc-toolbar-fixed-adjust">
-    <div class="mdc-simple-menu" id="search-menu" tabindex="-1">
-        <ul class="mdc-dialog__body--scrollable mdc-simple-menu__items mdc-list mdc-list--avatar-list menu-search"
-            role="menu" id="mdc-search-list">
-        </ul>
-    </div>
     <div class="mdc-layout-grid">
-        <div class="mdc-layout-grid__inner">
-            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-                <span id="anime-title" class="mdc-typography--headline"></span>
-            </div>
-        </div>
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
                 <video id="my-player" class="video-js vjs-default-skin" controls preload="auto"
@@ -140,15 +129,6 @@
             </div>
         </div>
     </div>
-    <div class="mdc-snackbar"
-         aria-live="assertive"
-         aria-atomic="true"
-         aria-hidden="true">
-        <div class="mdc-snackbar__text"></div>
-        <div class="mdc-snackbar__action-wrapper">
-            <button type="button" class="mdc-button mdc-snackbar__action-button"></button>
-        </div>
-    </div>
 </main>
 <p id="invite-link" style="
     display: none;"></p>
@@ -173,9 +153,6 @@
                     break;
                 case 1:
                     followLink("/watchlist/");
-                    break;
-                case 2:
-                    followLink("/settings/");
                     break;
                 case 3:
                     signout();

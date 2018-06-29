@@ -33,8 +33,11 @@ public class UserRest {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response add(UserModel user) {
-    	userDao.persist(user);
+    public Response add(@HeaderParam("user") String user, @HeaderParam("pw") String pw) {
+        UserModel usermodel = new UserModel();
+        usermodel.setUsername(user);
+        usermodel.setPw(pw);
+    	userDao.persist(usermodel);
 		return Response.status(200).build();
     }
 

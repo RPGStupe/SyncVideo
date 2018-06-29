@@ -4,13 +4,13 @@
     <div class="mdc-toolbar__row">
         <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
             <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg"
-                    onclick='followLink("${pageContext.request.contextPath}");'
+                    onclick='home()'
                     id="leave-button"
                     style="align-self: center;margin-left:16px;margin-right: 16px;">New Room
             </button>
         </section>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-middle">
-            <span class="mdc-toolbar__title"><a href="#" style="color:inherit;text-decoration:none;" onclick="followLink('${pageContext.request.contextPath}');">SyncVideo</a></span>
+            <span class="mdc-toolbar__title"><a href="#" style="color:inherit;text-decoration:none;" onclick="home();">SyncVideo</a></span>
         </section>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
@@ -32,7 +32,7 @@
                          onmouseout="timeOut = setTimeout(function() {menuTop.open = false;},200);"
                          id="profile-mouseaction">
                         <a href="#">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/proxsync.appspot.com/o/panda.svg?alt=media&token=6f4d5bf1-af69-4211-994d-66655456d91a"
+                            <img src="http://www.radiantch.com/images/profile-banner.jpg"
                                  id="avatar-toolbar" class="user-avatar-toolbar" onclick="followLink('/profile/');">
                         </a>
                         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="profile-menu"
@@ -42,10 +42,6 @@
                                 <li class="mdc-list-item profile-list" role="menuitem" tabindex="0"
                                     onclick="followLink('/profile/');">
                                     <span style="align-self:center;">Profile</span>
-                                </li>
-                                <li class="mdc-list-item profile-list" role="menuitem" tabindex="0"
-                                    onclick="followLink('/settings/');">
-                                    <span style="align-self:center;">Settings</span>
                                 </li>
                                 <li class="mdc-list-divider" role="separator"></li>
                                 <li class="mdc-list-item profile-list" role="menuitem" tabindex="0"
@@ -85,6 +81,7 @@
             </div>
         </section>
         <button type="button" class="mdc-button" onclick="login()">Login</button>
+        <button type="button" class="mdc-button" onclick="register()">Register</button>
     </div>
     <div class="mdc-dialog__backdrop"></div>
 </aside>
@@ -121,22 +118,38 @@
     }
 
     async function logout() {
-        await jQuery.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            'type': 'POST',
-            'url': './rest/user/logout',
-            'dataType': 'html',
-            success: function () {
-                location.reload();
-            }
-        });
+        if (window.location.href.includes("profile")) {
+
+            await jQuery.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                'type': 'POST',
+                'url': '../rest/user/logout',
+                'dataType': 'html',
+                success: function () {
+                    location.reload();
+                }
+            });
+        } else {
+
+            await jQuery.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                'type': 'POST',
+                'url': './rest/user/logout',
+                'dataType': 'html',
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
     }
 
     function login() {
-        console.log(document.getElementById('password-text-field').value);
         jQuery.ajax({
             headers: {
                 'Accept': 'application/json',
@@ -149,6 +162,29 @@
                 location.reload();
             }
         });
+    }
+
+    async function register() {
+        await jQuery.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'user': document.getElementById('username-text-field').value,
+                'pw': document.getElementById('password-text-field').value
+            },
+            'type': 'POST',
+            'url': './rest/user/add/',
+            'dataType': 'json',
+        });
+        window.alert("User registered. Please Log in now")
+    }
+
+    function home() {
+        if (window.location.href.includes("profile")) {
+            followLink('../');
+        } else {
+            followLink('/');
+        }
     }
 
     let loginDialog = new mdc.dialog.MDCDialog(document.querySelector('#login-mdc-dialog'));
