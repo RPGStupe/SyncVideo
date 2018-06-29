@@ -1,4 +1,4 @@
-<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
+<%@ page import="org.dhbw.mosbach.ai.syncvideo.util.LoginUtil" %>
 <html language="de" class="mdc-typography">
 <head>
     <%@include file="../res/template/head.jsp" %>

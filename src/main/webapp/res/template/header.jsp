@@ -1,4 +1,4 @@
-<%@ page import="de.dieser1memesprech.proxsync.util.LoginUtil" %>
+<%@ page import="org.dhbw.mosbach.ai.syncvideo.util.LoginUtil" %>
 <header id="page-header"
         class="mdc-toolbar mdc-toolbar--fixed">
     <div class="mdc-toolbar__row">

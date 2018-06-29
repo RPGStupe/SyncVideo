@@ -9,8 +9,8 @@
 
         <jta-data-source>java:jboss/datasources/MySqlDS</jta-data-source>
 
-        <class>de.dieser1memesprech.proxsync.database.model.UserModel</class>
-        <class>de.dieser1memesprech.proxsync.database.model.WatchlistModel</class>
+        <class>org.dhbw.mosbach.ai.syncvideo.database.model.UserModel</class>
+        <class>org.dhbw.mosbach.ai.syncvideo.database.model.WatchlistModel</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <!-- Enable caching globally. Set @Cacheable(false) to prevent caching of entities -->
