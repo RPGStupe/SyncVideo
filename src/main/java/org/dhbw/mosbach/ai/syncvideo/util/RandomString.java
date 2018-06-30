@@ -7,6 +7,7 @@ public class RandomString {
 
     /**
      * Generate a random string.
+     * https://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
      */
     public String nextString() {
         for (int idx = 0; idx < buf.length; ++idx)

@@ -10,7 +10,6 @@ import java.util.*;
 
 @ApplicationScoped
 public class UserSessionHandler {
-    private long lastProxerRequest = 0;
     private final Set<Session> sessions = new HashSet<Session>();
     private static UserSessionHandler instance;
 
@@ -23,31 +22,12 @@ public class UserSessionHandler {
         return instance;
     }
 
-    public boolean proxRequest() {
-        if(System.currentTimeMillis() < lastProxerRequest + 30000) {
-            return false;
-        } else {
-            lastProxerRequest = System.currentTimeMillis();
-            return true;
-        }
-    }
-
     public void addSession(javax.websocket.Session session) {
         sessions.add(session);
     }
 
     public void removeSession(javax.websocket.Session session) {
         sessions.remove(session);
-    }
-
-    public List<Session> getSessions() {
-        return new ArrayList<Session>(sessions);
-    }
-
-    public void addUser(Session session) {
-    }
-
-    public void removeUser(int id) {
     }
 
     public void sendToRoom(JsonObject message, Room room) {

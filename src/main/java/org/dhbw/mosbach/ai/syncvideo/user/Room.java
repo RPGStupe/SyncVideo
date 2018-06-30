@@ -1,24 +1,16 @@
 package org.dhbw.mosbach.ai.syncvideo.user;
 
-import org.dhbw.mosbach.ai.syncvideo.util.NamespaceContextMap;
 import org.dhbw.mosbach.ai.syncvideo.util.RandomString;
 import org.dhbw.mosbach.ai.syncvideo.websocket.UserSessionHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.xml.sax.InputSource;
 
 import javax.json.*;
 import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.*;
 import java.util.*;
 
 public class Room {
-    private int episode;
 
     public LinkedList<Video> getPlaylist() {
         return playlist;
@@ -31,7 +23,6 @@ public class Room {
     private HashMap<Session, User> userMap = new HashMap<Session, User>();
     private List<Session> sessions;
     private String video = "";
-    private String _9animeLink = "";
     private Session host;
     private String id;
     private boolean playing = false;
@@ -143,8 +134,7 @@ public class Room {
         if (playlist.size() == 1) {
             updatePlaylistInfo(playlist.peek());
             if (!playlist.isEmpty()) {
-                System.out.println(playlist.peek().episode);
-                setVideo(playlist.peek().url, playlist.peek().episode);
+                setVideo(playlist.peek().url);
             }
         }
         sendPlaylist();
@@ -153,11 +143,10 @@ public class Room {
     public void addVideo(String url, int episode) {
         System.out.println(episode);
         playlist.add(new Video(url, episode));
-        this.episode = episode;
         if (playlist.size() == 1) {
             updatePlaylistInfo(playlist.peek());
             if (!playlist.isEmpty()) {
-                setVideo(playlist.peek().url, playlist.peek().episode);
+                setVideo(playlist.peek().url);
             }
         }
         sendPlaylist();
@@ -168,11 +157,7 @@ public class Room {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (Video v : playlist) {
             arrayBuilder.add(Json.createObjectBuilder()
-                    .add("title", v.animeTitle)
-                    .add("episodeTitle", v.episodeTitle)
-                    .add("episodePoster", v.episodePoster)
-                    .add("episode", v.episode)
-                    .add("episodeCount", v.episodeCount)
+                    .add("title", "")
                     .build());
         }
         JsonProvider provider = JsonProvider.provider();
@@ -221,20 +206,6 @@ public class Room {
         }
     }
 
-    private String evaluateXPath(String xml, String expr) {
-        String res = "";
-        try {
-            NamespaceContext nsContext = new NamespaceContextMap(
-                    "xml", "http://www.w3.org/XML/1998/namespace");
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            xPath.setNamespaceContext(nsContext);
-            return xPath.evaluate(expr, new InputSource(new StringReader(xml)));
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
-
     private void sendRoomList() {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (Session s : sessions) {
@@ -268,8 +239,7 @@ public class Room {
         userMap.get(s).setName(name);
     }
 
-    public void setVideo(String url, int episode) {
-        this.episode = episode;
+    public void setVideo(String url) {
         timestamp = null;
         for (Session s : readyStates.keySet()) {
             markReady(s, false);
@@ -342,7 +312,7 @@ public class Room {
         timestamp = null;
         if (!playlist.isEmpty()) {
             sendPlaylist();
-            setVideo(playlist.peek().getUrl(), playlist.peek().episode);
+            setVideo(playlist.peek().getUrl());
         } else {
             sendPlaylist();
         }
