@@ -17,7 +17,7 @@
                 <div id="register-row"
                      style="align-self:center;float:right;margin-right:16px;margin-left:auto;">
                     <% if (!LoginUtil.checkCookie(request, "loggedIn").equals("true")) {
-                        %>
+                    %>
                     <button class="mdc-button mdc-button--raised mdc-theme--secondary-bg mdc-button--align-middle"
                             onclick="loginDialog.show()"
                             id="register-button"
@@ -164,8 +164,8 @@
         });
     }
 
-    async function register() {
-        await jQuery.ajax({
+    function register() {
+        jQuery.ajax({
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -174,9 +174,11 @@
             },
             'type': 'POST',
             'url': './rest/user/add/',
-            'dataType': 'json',
+            'dataType': 'html',
+            success: function () {
+                location.reload();
+            }
         });
-        window.alert("User registered. Please Log in now")
     }
 
     function home() {

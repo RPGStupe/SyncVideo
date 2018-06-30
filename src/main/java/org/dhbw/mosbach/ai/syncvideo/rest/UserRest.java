@@ -38,7 +38,13 @@ public class UserRest {
         usermodel.setUsername(user);
         usermodel.setPw(pw);
     	userDao.persist(usermodel);
-		return Response.status(200).build();
+
+        String sessionId = UUID.randomUUID().toString();
+        sessionToUid.put(sessionId, usermodel.getId());
+        return Response.status(200)
+                .cookie(new NewCookie("sessionId", sessionId,"/", "", "", 1000000, false))
+                .cookie(new NewCookie("loggedIn", "true","/", "", "", 1000000, false))
+                .build();
     }
 
     /**
